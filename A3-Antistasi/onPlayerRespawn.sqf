@@ -241,6 +241,6 @@ else
 	{
 	_viejo setVariable ["spawner",nil,true];
 	_nuevo setVariable ["spawner",true,true];
-	if (hayRHS) then {[player] call A3A_fnc_RHSdress};
+	if (isRHS) then {[player] call A3A_fnc_RHSdress};
 	if (hayACE) then {[] call A3A_fnc_ACEpvpReDress};
 	};

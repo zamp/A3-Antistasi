@@ -112,7 +112,7 @@ if !(isFIA) then
 	{
 	if (sunOrMoon < 1) then
 		{
-		if (!hayRHS) then
+		if (!isRHS) then
 			{
 			if ((faction _unit != factionMachoMalos) and (faction _unit != factionMachoMuyMalos) and (_unit != leader (group _unit))) then
 				{
@@ -194,7 +194,7 @@ if !(isFIA) then
 		}
 	else
 		{
-		if (!hayRHS) then
+		if (!isRHS) then
 			{
 			if ((faction _unit != factionMachoMalos) and (faction _unit != factionMachoMuyMalos)) then
 				{

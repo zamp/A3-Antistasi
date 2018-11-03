@@ -1,9 +1,9 @@
 _marcador = [marcadores,player] call BIS_fnc_nearestPosition;
 
 _lado = side player;
-_nombre = if (_lado == enemySide) then {nameMalos} else {nameMuyMalos};
+_name = if (_lado == enemySide) then {nameMalos} else {nameMuyMalos};
 
-if (lados getVariable [_marcador,sideUnknown] != _lado) exitWith {hint format ["You need to be close to a zone belonging to %1 in order to request a vehicle",_nombre]};
+if (lados getVariable [_marcador,sideUnknown] != _lado) exitWith {hint format ["You need to be close to a zone belonging to %1 in order to request a vehicle",_name]};
 if ((!(_marcador in aeropuertos)) and (!(_marcador in puertos)) and (!(_marcador in puestos))) exitWith {hint "You need to be close to an Airbase, Seaport or Outpost of your side in order to request a vehicle"};
 if (not(player inArea _marcador)) exitWith {hint "You need to be close to an Airbase, Seaport or Outpost in order to request a vehicle"};
 

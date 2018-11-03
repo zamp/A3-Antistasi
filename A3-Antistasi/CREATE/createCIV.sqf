@@ -64,7 +64,7 @@ while {(spawner getVariable _marcador != 2) and (_cuenta < _numVeh) and (_cuenta
 		    _mrk setMarkerShape "RECTANGLE";
 		    _mrk setMarkerBrush "SOLID";
 		    _mrk setMarkerColor friendlyColor;
-		    //_mrk setMarkerText _nombre;
+		    //_mrk setMarkerText _name;
 		    */
 			_veh = _tipoveh createVehicle _pos;
 			_veh setDir _dirveh;

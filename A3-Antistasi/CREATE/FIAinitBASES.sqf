@@ -196,7 +196,7 @@ if !(isFIA) then
 			};
 		};
 	};
-if ({if (_x in humo) exitWith {1}} count unlockedMagazines > 0) then {_unit addMagazines [selectRandom humo,2]};
+if ({if (_x in smoke) exitWith {1}} count unlockedMagazines > 0) then {_unit addMagazines [selectRandom smoke,2]};
 
 _EHkilledIdx = _unit addEventHandler ["killed", {
 	_muerto = _this select 0;

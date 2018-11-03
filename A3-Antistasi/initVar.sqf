@@ -40,8 +40,8 @@ for "_i" from 0 to (count _cfgMagazines) -1 do
 	_magazine = _cfgMagazines select _i;
 	if (isClass _magazine) then
 	{
-		_nombre = configName (_magazine);
-		allMagazines pushBack _nombre;
+		_name = configName (_magazine);
+		allMagazines pushBack _name;
 	};
 };
 
@@ -54,7 +54,7 @@ rlaunchers = [];
 helmets = [];
 //vests = [];
 
-hayRHS = false;
+isRHS = false;
 
 //lockedWeapons = ["Rangefinder","Laserdesignator"];
 
@@ -90,28 +90,27 @@ _allItems = "
     { getNumber ( _x >> ""type"" ) isEqualTo 131072 } } )
 " configClasses ( configFile >> "cfgWeapons" );
 
-_yaMetidos = [];
+_excludeList = [];
 {
-_nombre = configName _x;
-_nombre = [_nombre] call BIS_fnc_baseWeapon;
-if (not(_nombre in _yaMetidos)) then
+	_name = configName _x;
+	_name = [_name] call BIS_fnc_baseWeapon;
+	if (not(_name in _excludeList)) then
 	{
-	_magazines = getArray (configFile / "CfgWeapons" / _nombre / "magazines");
-	_yaMetidos pushBack _nombre;
-	_weapon = [_nombre] call BIS_fnc_itemType;
-	_weaponType = _weapon select 1;
-	switch (_weaponType) do
+		_magazines = getArray (configFile / "CfgWeapons" / _name / "magazines");
+		_excludeList pushBack _name;
+		_weapon = [_name] call BIS_fnc_itemType;
+		_weaponType = _weapon select 1;
+		switch (_weaponType) do
 		{
-		case "AssaultRifle": {arifles pushBack _nombre};
-		case "MachineGun": {mguns pushBack _nombre};
-		case "SniperRifle": {srifles pushBack _nombre};
-		case "Handgun": {hguns pushBack _nombre};
-		case "MissileLauncher": {mlaunchers pushBack _nombre};
-		case "RocketLauncher": {rlaunchers pushBack _nombre};
-		case "Headgear": {helmets pushBack _nombre};
-		//case "Vest": {vests pushBack _nombre};
+			case "AssaultRifle": {arifles pushBack _name};
+			case "MachineGun": {mguns pushBack _name};
+			case "SniperRifle": {srifles pushBack _name};
+			case "Handgun": {hguns pushBack _name};
+			case "MissileLauncher": {mlaunchers pushBack _name};
+			case "RocketLauncher": {rlaunchers pushBack _name};
+			case "Headgear": {helmets pushBack _name};
+			//case "Vest": {vests pushBack _name};
 		};
-
 	};
 } forEach _allPrimaryWeapons + _allHandGuns + _allLaunchers + _allItems;
 //vests = vests select {getNumber (configfile >> "CfgWeapons" >> _x >> "ItemInfo" >> "HitpointsProtectionInfo" >> "Chest" >> "armor") > 5};
@@ -126,19 +125,19 @@ if ("LIB_PTRD" in arifles) then
 {
 	isFIA = true;
 	helmets = [];
-	humo = ["LIB_RDG","LIB_NB39"];
+	smoke = ["LIB_RDG","LIB_NB39"];
 }
 else
 {
-	if ("rhs_weap_akms" in arifles) then {activeAFRF = true; hayRHS = true};
+	if ("rhs_weap_akms" in arifles) then {activeAFRF = true; isRHS = true};
 	if ("ffaa_armas_hkg36k_normal" in arifles) then {isFFAA = true};
-	if ("rhs_weap_m4a1_d" in arifles) then {activeUSAF = true; hayRHS = true};
-	if ("rhs_weap_m92" in arifles) then {activeGREF = true; hayRHS = true} else {mguns pushBack "LMG_Mk200_BI_F"};
+	if ("rhs_weap_m4a1_d" in arifles) then {activeUSAF = true; isRHS = true};
+	if ("rhs_weap_m92" in arifles) then {activeGREF = true; isRHS = true} else {mguns pushBack "LMG_Mk200_BI_F"};
 	helmets = helmets select {getNumber (configfile >> "CfgWeapons" >> _x >> "ItemInfo" >> "HitpointsProtectionInfo" >> "Head" >> "armor") > 2};
-	humo = ["SmokeShell","SmokeShellRed","SmokeShellGreen","SmokeShellBlue","SmokeShellYellow","SmokeShellPurple","SmokeShellOrange"];
+	smoke = ["SmokeShell","SmokeShellRed","SmokeShellGreen","SmokeShellBlue","SmokeShellYellow","SmokeShellPurple","SmokeShellOrange"];
 };
 
-titanLaunchers = if ((!hayRHS) and !isFIA and !myCustomMod) then
+titanLaunchers = if ((!isRHS) and !isFIA and !myCustomMod) then
 {
 	["launch_B_Titan_F","launch_I_Titan_F","launch_O_Titan_ghex_F","launch_O_Titan_F","launch_B_Titan_tna_F"]
 }
@@ -146,7 +145,7 @@ else
 {
 	[]
 };
-antitanqueAAF = if ((!hayRHS) and !isFIA and !myCustomMod) then
+antitanqueAAF = if ((!isRHS) and !isFIA and !myCustomMod) then
 {
 	["launch_I_Titan_F","launch_I_Titan_short_F"]
 }
@@ -154,7 +153,7 @@ else
 {
 	[];
 };//possible Titan weapons that spawn in  ammoboxes
-MantitanqueAAF = if ((!hayRHS) and !isFIA and !myCustomMod) then
+MantitanqueAAF = if ((!isRHS) and !isFIA and !myCustomMod) then
 {
 	["Titan_AT", "Titan_AP", "Titan_AA"]
 }
@@ -162,13 +161,13 @@ else
 {
 	if (isFIA) then {["LIB_Shg24"]} else {[]};
 };//possible Titan rockets that spawn in  ammoboxes
-minasAAF = if ((!hayRHS) and !isFIA and !myCustomMod) then
+minasAAF = if ((!isRHS) and !isFIA and !myCustomMod) then
 {
 	["SLAMDirectionalMine_Wire_Mag","SatchelCharge_Remote_Mag","ClaymoreDirectionalMine_Remote_Mag", "ATMine_Range_Mag","APERSTripMine_Wire_Mag","APERSMine_Range_Mag", "APERSBoundingMine_Range_Mag"]
 }
 else
 {
-	if (hayRHS) then
+	if (isRHS) then
 	{
 		["rhsusf_m112_mag","rhsusf_mine_m14_mag","rhs_mine_M19_mag","rhs_mine_tm62m_mag","rhs_mine_pmn2_mag"]
 	}
@@ -177,13 +176,13 @@ else
 		if (isFIA and !myCustomMod) then {["LIB_PMD6_MINE_mag","LIB_TM44_MINE_mag","LIB_US_TNT_4pound_mag"]} else {[]};
 	}
 	};//possible mines that spawn in AAF ammoboxescomment "Exported from Arsenal by Alberto";
-itemsAAF = if ((!hayRHS) and !isFIA and !myCustomMod) then
+itemsAAF = if ((!isRHS) and !isFIA and !myCustomMod) then
 {
 	["FirstAidKit","Medikit","MineDetector","NVGoggles","ToolKit","muzzle_snds_H","muzzle_snds_L","muzzle_snds_M","muzzle_snds_B","muzzle_snds_H_MG","muzzle_snds_acp","bipod_03_F_oli","muzzle_snds_338_green","muzzle_snds_93mmg_tan","Rangefinder","Laserdesignator","ItemGPS","acc_pointer_IR","ItemRadio"]
 }
 else
 {
-	if (hayRHS) then
+	if (isRHS) then
 	{
 		["FirstAidKit","Medikit","MineDetector","ToolKit","ItemGPS","acc_pointer_IR","ItemRadio"]
 	}
@@ -291,7 +290,7 @@ if !(_item in (opticasAAF + flashLights + pointers)) then
 	};
 } forEach (_x call BIS_fnc_compatibleItems);
 } forEach (armasNATO + armasCSAT);
-if (hayRHS) then
+if (isRHS) then
 	{
 	opticasAAF = opticasAAF select {getText (configfile >> "CfgWeapons" >> _x >> "author") == "Red Hammer Studios"};
 	flashlights = flashlights select {getText (configfile >> "CfgWeapons" >> _x >> "author") == "Red Hammer Studios"};
@@ -316,7 +315,7 @@ vehFastRope = ["O_Heli_Light_02_unarmed_F","B_Heli_Transport_01_camo_F","RHS_UH6
 vehUnlimited = vehNATONormal + vehCSATNormal + [vehNATORBoat,vehNATOPatrolHeli,vehCSATRBoat,vehCSATPatrolHeli,vehNATOUAV,vehNATOUAVSmall,NATOMG,NATOMortar,vehCSATUAV,vehCSATUAVSmall,CSATMG,CSATMortar];
 sniperGroups = [gruposNATOSniper,gruposCSATSniper];
 sniperUnits = ["O_T_Soldier_M_F","O_T_Sniper_F","O_T_ghillie_tna_F","O_V_Soldier_M_ghex_F","B_CTRG_Soldier_M_tna_F","B_T_soldier_M_F","B_T_Sniper_F","B_T_ghillie_tna_F"] + SDKSniper + [FIAMarksman,NATOMarksman,CSATMarksman];
-if (hayRHS) then {sniperUnits = sniperUnits + ["rhsusf_socom_marsoc_sniper","rhs_vdv_marksman_asval"]};
+if (isRHS) then {sniperUnits = sniperUnits + ["rhsusf_socom_marsoc_sniper","rhs_vdv_marksman_asval"]};
 
 arrayCivs = if (worldName == "Tanoa") then
 	{

@@ -173,8 +173,8 @@ if (player getVariable ["pvp",false]) exitWith
 		if ((_caja == NATOAmmoBox) or (_caja == CSATAmmoBox)) then {_override = true};
 		_override
 		}];
-	_nombre = if (side player == enemySide) then {nameMalos} else {nameMuyMalos};
-	["TaskFailed", ["", format ["%1 joined %2 SpecOps",name player,_nombre]]] remoteExec ["BIS_fnc_showNotification",[friendlySide,civilian]];
+	_name = if (side player == enemySide) then {nameMalos} else {nameMuyMalos};
+	["TaskFailed", ["", format ["%1 joined %2 SpecOps",name player,_name]]] remoteExec ["BIS_fnc_showNotification",[friendlySide,civilian]];
 	waituntil {!isnull (finddisplay 46)};
 	gameMenu = (findDisplay 46) displayAddEventHandler ["KeyDown",
 		{
@@ -562,7 +562,7 @@ if (hayACE) then
 	{
 	_texto = _texto + ["ACE 3 Detected\n\nAntistasi detects ACE modules in the server config.\nACE items added to arsenal and ammoboxes. Default AI control is disabled\nIf ACE Medical is used, default revive system will be disabled.\nIf ACE Hearing is used, default earplugs will be disabled."];
 	};
-if (hayRHS) then
+if (isRHS) then
 	{
 	_texto = _texto + ["RHS Detected\n\nAntistasi detects RHS in the server config.\nDepending on the modules will have the following effects.\n\nAFRF: Replaces CSAT by a mix of russian units\n\nUSAF: Replaces NATO by a mix of US units\n\nGREF: Recruited AI will count with RHS as basic weapons, replaces FIA with Chdk units. Adds some civilian trucks"];
 	};
@@ -571,7 +571,7 @@ if (isFFAA) then
 	_texto = _texto + ["FFAA Detected\n\nAntistasi detects FFAA in the server config.\nFIA Faction will be replaced by Spanish Armed Forces"];
 	};
 
-if (hayTFAR or hayACE or hayRHS or hayACRE or isFFAA) then
+if (hayTFAR or hayACE or isRHS or hayACRE or isFFAA) then
 	{
 	[_texto] spawn
 		{

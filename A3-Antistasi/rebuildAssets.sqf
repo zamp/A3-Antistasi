@@ -52,7 +52,7 @@ if (_salir) exitWith {hint format ["%1",_texto]};
 
 if (count _antenaMuerta == 0) then
 	{
-	_nombre = [_sitio] call A3A_fnc_localizar;
+	_name = [_sitio] call A3A_fnc_localizar;
 
 	hint format ["%1 Rebuilt"];
 

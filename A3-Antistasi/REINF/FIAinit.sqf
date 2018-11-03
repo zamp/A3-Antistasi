@@ -1,4 +1,4 @@
-private ["_unit","_muerto","_killer","_skill","_nombre","_tipo"];
+private ["_unit","_muerto","_killer","_skill","_name","_tipo"];
 
 _unit = _this select 0;
 
@@ -144,7 +144,7 @@ if (!haveRadio) then
 	if ((_unit != leader _unit) and (_tipo != staticCrewBuenos)) then {_unit unlinkItem "ItemRadio"};
 	};
 
-if ({if (_x in humo) exitWith {1}} count unlockedMagazines > 0) then {_unit addMagazines [selectRandom humo,2]};
+if ({if (_x in smoke) exitWith {1}} count unlockedMagazines > 0) then {_unit addMagazines [selectRandom smoke,2]};
 if !(isFIA) then
 	{
 	if ((sunOrMoon < 1) and (_tipo != SDKUnarmed)) then

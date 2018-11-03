@@ -102,9 +102,9 @@ spawner setVariable [_x,2,true];
 } forEach marcadores;
 private ["_sizeX","_sizeY","_size"];
 {
-//_nombre = text _x;
-_nombre = [text _x, true] call A3A_fnc_fn_location;
-if ((_nombre != "") and (_nombre != "Lakatoro01") and (_nombre != "Galili01") and (_nombre != "Sosovu01") and (_nombre != "Ipota01") and (_nombre != "hill12") and (_nombre != "V_broad22")) then//sagonisi is blacklisted in Altis for some reason. If your island has a city in a small island you should blacklist it (road patrols will try to reach it)
+//_name = text _x;
+_name = [text _x, true] call A3A_fnc_fn_location;
+if ((_name != "") and (_name != "Lakatoro01") and (_name != "Galili01") and (_name != "Sosovu01") and (_name != "Ipota01") and (_name != "hill12") and (_name != "V_broad22")) then//sagonisi is blacklisted in Altis for some reason. If your island has a city in a small island you should blacklist it (road patrols will try to reach it)
     {
     _sizeX = getNumber (configFile >> "CfgWorlds" >> worldName >> "Names" >> (text _x) >> "radiusA");
     _sizeY = getNumber (configFile >> "CfgWorlds" >> worldName >> "Names" >> (text _x) >> "radiusB");
@@ -125,15 +125,15 @@ if ((_nombre != "") and (_nombre != "Lakatoro01") and (_nombre != "Galili01") an
             _roads pushBack (getPosATL _x);
             };
         } forEach _roadsProv;
-        carreteras setVariable [_nombre,_roads];
+        carreteras setVariable [_name,_roads];
         }
     else
         {
-        _roads = carreteras getVariable _nombre;
-        _numCiv = server getVariable _nombre;
+        _roads = carreteras getVariable _name;
+        _numCiv = server getVariable _name;
         if (isNil "_numCiv") then
             {
-            diag_log format ["Antistasi: Error in initZones.sqf. A mi no me sale en %1",_nombre];
+            diag_log format ["Antistasi: Error in initZones.sqf. A mi no me sale en %1",_name];
             _numCiv = (count (nearestObjects [_pos, ["house"], _size]));
             _roadsProv = _pos nearRoads _size;
             //_roads = [];
@@ -144,33 +144,33 @@ if ((_nombre != "") and (_nombre != "Lakatoro01") and (_nombre != "Galili01") an
                 _roads pushBack (getPosATL _x);
                 };
             } forEach _roadsProv;
-            carreteras setVariable [_nombre,_roads];
+            carreteras setVariable [_name,_roads];
             };
-        if (typeName _numCiv != typeName 0) then {hint format ["Datos erróneos en %1. Son del tipo %2",_nombre, typeName _numCiv]};
-        //if (isNil "_roads") then {hint format ["A mi no me sale en %1",_nombre]};
+        if (typeName _numCiv != typeName 0) then {hint format ["Datos erróneos en %1. Son del tipo %2",_name, typeName _numCiv]};
+        //if (isNil "_roads") then {hint format ["A mi no me sale en %1",_name]};
         };
     _numVeh = round (_numCiv / 3);
     _nroads = count _roads;
     _nearRoadsFinalSorted = [_roads, [], { _pos distance _x }, "ASCEND"] call BIS_fnc_sortBy;
     _pos = _nearRoadsFinalSorted select 0;
-    if (isNil "_pos") then {diag_log format ["Falla %1",_nombre]};
-    _mrk = createmarker [format ["%1", _nombre], _pos];
+    if (isNil "_pos") then {diag_log format ["Falla %1",_name]};
+    _mrk = createmarker [format ["%1", _name], _pos];
     _mrk setMarkerSize [_size, _size];
     _mrk setMarkerShape "RECTANGLE";
     _mrk setMarkerBrush "SOLID";
     _mrk setMarkerColor enemyColor;
-    _mrk setMarkerText _nombre;
+    _mrk setMarkerText _name;
     _mrk setMarkerAlpha 0;
-    ciudades pushBack _nombre;
-    spawner setVariable [_nombre,2,true];
-    _dmrk = createMarker [format ["Dum%1",_nombre], _pos];
+    ciudades pushBack _name;
+    spawner setVariable [_name,2,true];
+    _dmrk = createMarker [format ["Dum%1",_name], _pos];
     _dmrk setMarkerShape "ICON";
     _dmrk setMarkerType "loc_Ruin";
     _dmrk setMarkerColor enemyColor;
     if (_nroads < _numVeh) then {_numVeh = _nroads};
     lados setVariable [_mrk,enemySide,true];
     _info = [_numCiv, _numVeh, prestigeOPFOR,prestigeBLUFOR];
-    server setVariable [_nombre,_info,true];
+    server setVariable [_name,_info,true];
     };
 }foreach (nearestLocations [getArray (configFile >> "CfgWorlds" >> worldName >> "centerPosition"), ["NameCityCapital","NameCity","NameVillage","CityCenter"], 25000]);
 

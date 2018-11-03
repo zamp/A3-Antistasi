@@ -183,8 +183,8 @@ while {true} do
 			{
 			_cambiado = true;
 			destroyedCities = destroyedCities - [_x];
-			_nombre = [_x] call A3A_fnc_localizar;
-			["TaskSucceeded", ["", format ["%1 Rebuilt",_nombre]]] remoteExec ["BIS_fnc_showNotification",[friendlySide,civilian]];
+			_name = [_x] call A3A_fnc_localizar;
+			["TaskSucceeded", ["", format ["%1 Rebuilt",_name]]] remoteExec ["BIS_fnc_showNotification",[friendlySide,civilian]];
 			sleep 2;
 			};
 		} forEach (destroyedCities - ciudades) select {lados getVariable [_x,sideUnknown] != friendlySide};

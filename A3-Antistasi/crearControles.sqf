@@ -27,25 +27,25 @@ if (_posroad distance _pos > 400) then
         	_cercano = [controles,_posroad] call BIS_fnc_nearestPosition;
         	if (getMarkerPos _cercano distance _posroad > 1000) then
         		{
-        		_nombre = format ["control_%1", count controles];
-        		_mrk = createmarker [format ["%1", _nombre], _posroad];
+        		_name = format ["control_%1", count controles];
+        		_mrk = createmarker [format ["%1", _name], _posroad];
                         _mrk setMarkerSize [30,30];
                         _mrk setMarkerShape "RECTANGLE";
                         _mrk setMarkerBrush "SOLID";
                         _mrk setMarkerColor friendlyColor;
-                        _mrk setMarkerText _nombre;
+                        _mrk setMarkerText _name;
                         if (not debug) then {_mrk setMarkerAlpha 0};
                         if (lados getVariable [_marcador,sideUnknown] == enemySide) then
                                 {
-                                lados setVariable [_nombre,enemySide,true];
+                                lados setVariable [_name,enemySide,true];
                                 }
                         else
                                 {
-                                if (lados getVariable [_marcador,sideUnknown] == oppositionSide) then {lados setVariable [_nombre,oppositionSide,true]} else {lados setVariable [_nombre,friendlySide,true]};
+                                if (lados getVariable [_marcador,sideUnknown] == oppositionSide) then {lados setVariable [_name,oppositionSide,true]} else {lados setVariable [_name,friendlySide,true]};
                                 };
-                        controles pushBackUnique _nombre;
-                        marcadores pushBackUnique _nombre;
-                        spawner setVariable [_nombre,2,true];
+                        controles pushBackUnique _name;
+                        marcadores pushBackUnique _name;
+                        spawner setVariable [_name,2,true];
                         _cuenta = _cuenta + 1;
         		};
                 };
