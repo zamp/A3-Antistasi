@@ -12,8 +12,8 @@ if ((_cargoSeats >= 2) and (_cargoSeats < 4)) then
 	{
 	switch (_lado) do
 		{
-		case malos: {_return = gruposNATOSentry};
-		case muyMalos: {_return = gruposCSATSentry};
+		case enemySide: {_return = gruposNATOSentry};
+		case oppositionSide: {_return = gruposCSATSentry};
 		};
 	}
 else
@@ -22,15 +22,15 @@ else
 		{
 		switch (_lado) do
 			{
-			case malos: {_return = selectRandom gruposNATOmid};
-			case muyMalos: {_return = selectRandom gruposCSATmid};
+			case enemySide: {_return = selectRandom gruposNATOmid};
+			case oppositionSide: {_return = selectRandom gruposCSATmid};
 			};
 		}
 	else
 		{
 		switch (_lado) do
 			{
-			case malos:
+			case enemySide:
 				{
 				_return = selectRandom gruposNATOSquad;
 				if (_cargoSeats > 8) then
@@ -42,7 +42,7 @@ else
 						};
 					};
 				};
-			case muyMalos:
+			case oppositionSide:
 				{
 				_return = selectRandom gruposCSATSquad;
 				if (_cargoSeats > 8) then

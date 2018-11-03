@@ -14,7 +14,7 @@ if (_marcador isEqualType "") then
 	};
 _tipo = _this select 2;
 
-_tipoAvion = if (_lado == malos) then {vehNATOPlane} else {vehCSATPlane};
+_tipoAvion = if (_lado == enemySide) then {vehNATOPlane} else {vehCSATPlane};
 
 _ang = random 360;
 _angorig = _ang + 180;
@@ -40,16 +40,16 @@ if (_esMarcador) then
 			}
 		};
 	_pos1 = [_posicion, 400, _angorig] call BIS_Fnc_relPos;
-	_origpos = [_posicion, 3*distanciaSPWN, _angorig] call BIS_fnc_relPos;
+	_origpos = [_posicion, 3*spawnDistanceDefault, _angorig] call BIS_fnc_relPos;
 	_pos2 = [_posicion, 200, _ang] call BIS_Fnc_relPos;
-	_finpos = [_posicion, 3*distanciaSPWN, _ang] call BIS_fnc_relPos;
+	_finpos = [_posicion, 3*spawnDistanceDefault, _ang] call BIS_fnc_relPos;
 	}
 else
 	{
-	_amigos = if (_lado == malos) then {allUnits select {(_x distance _posicion < 300) and (alive _x) and ((side _x == malos) or (side _x == civilian))}} else {allUnits select {(_x distance _posicion < 300) and (alive _x) and (side _x == muyMalos)}};
+	_amigos = if (_lado == enemySide) then {allUnits select {(_x distance _posicion < 300) and (alive _x) and ((side _x == enemySide) or (side _x == civilian))}} else {allUnits select {(_x distance _posicion < 300) and (alive _x) and (side _x == oppositionSide)}};
 	if (count _amigos == 0) then
 		{
-		_enemigos = if (_lado == malos) then {allUnits select {_x distance _posicion < 300 and (side _x != _lado) and (side _x != civilian) and (alive _x)}} else {allUnits select {_x distance _posicion < 300 and (side _x != _lado) and (alive _x)}};
+		_enemigos = if (_lado == enemySide) then {allUnits select {_x distance _posicion < 300 and (side _x != _lado) and (side _x != civilian) and (alive _x)}} else {allUnits select {_x distance _posicion < 300 and (side _x != _lado) and (alive _x)}};
 		if (count _enemigos > 0) then
 			{
 			_mediaX = 0;

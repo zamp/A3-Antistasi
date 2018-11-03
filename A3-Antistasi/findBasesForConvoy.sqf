@@ -4,8 +4,8 @@ _marcador = _this select 0;
 _pos = getMarkerPos _marcador;
 _lado = lados getVariable [_marcador,sideUnknown];
 
-_aeropuertosAAF = (aeropuertos + puestos) select {(spawner getVariable _x == 2) and (dateToNumber date > server getVariable _x) and ([_x,_marcador] call A3A_fnc_isTheSameIsland) and (!(_x in forcedSpawn)) and (lados getVariable [_x,sideUnknown] == _lado) and !(_x in blackListDest) and (getMarkerPos _x distance _pos > distanciaSPWN)};
-if (_marcador in ciudades) then {_aeropuertosAAF = _aeropuertosAAF select {lados getVariable [_x,sideUnknown] == malos}};
+_aeropuertosAAF = (aeropuertos + puestos) select {(spawner getVariable _x == 2) and (dateToNumber date > server getVariable _x) and ([_x,_marcador] call A3A_fnc_isTheSameIsland) and (!(_x in forcedSpawn)) and (lados getVariable [_x,sideUnknown] == _lado) and !(_x in blackListDest) and (getMarkerPos _x distance _pos > spawnDistanceDefault)};
+if (_marcador in ciudades) then {_aeropuertosAAF = _aeropuertosAAF select {lados getVariable [_x,sideUnknown] == enemySide}};
 _aeropuertos = [];
 _base = "";
 {

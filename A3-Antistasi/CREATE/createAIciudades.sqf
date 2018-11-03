@@ -23,22 +23,22 @@ _esAAF = true;
 if (_marcador in destroyedCities) then
 	{
 	_esAAF = false;
-	_params = [_posicion,muyMalos,CSATSpecOp];
+	_params = [_posicion,oppositionSide,CSATSpecOp];
 	}
 else
 	{
-	if (_lado == malos) then
+	if (_lado == enemySide) then
 		{
 		_num = round (_num * (_prestigeOPFOR + _prestigeBLUFOR)/100);
 		_frontera = [_marcador] call A3A_fnc_isFrontline;
 		if (_frontera) then
 			{
 			_num = _num * 2;
-			_params = [_posicion, malos, gruposNATOSentry];
+			_params = [_posicion, enemySide, gruposNATOSentry];
 			}
 		else
 			{
-			_params = [_posicion, malos, gruposNATOGen];
+			_params = [_posicion, enemySide, gruposNATOGen];
 			};
 		}
 	else
@@ -47,7 +47,7 @@ else
 		_num = round (_num * (_prestigeBLUFOR/100));
 		_array = [];
 		{if (random 20 < skillFIA) then {_array pushBack (_x select 0)} else {_array pushBack (_x select 1)}} forEach gruposSDKsentry;
-		_params = [_posicion, buenos, _array];
+		_params = [_posicion, friendlySide, _array];
 		};
 	};
 if (_num < 1) then {_num = 1};
@@ -85,7 +85,7 @@ waitUntil {sleep 1;((spawner getVariable _marcador == 2)) or ({[_x,_marcador] ca
 
 if (({[_x,_marcador] call A3A_fnc_canConquer} count _soldados == 0) and (_esAAF)) then
 	{
-	[[_posicion,malos,"",false],"A3A_fnc_patrolCA"] remoteExec ["A3A_fnc_scheduler",2];
+	[[_posicion,enemySide,"",false],"A3A_fnc_patrolCA"] remoteExec ["A3A_fnc_scheduler",2];
 	};
 
 waitUntil {sleep 1;(spawner getVariable _marcador == 2)};

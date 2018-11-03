@@ -4,7 +4,7 @@ private ["_tipo","_posbase","_posibles","_sitios","_exists","_sitio","_pos","_ci
 
 _tipo = _this select 0;
 
-_posbase = getMarkerPos respawnBuenos;
+_posbase = getMarkerPos friendlyRespawn;
 _posibles = [];
 _sitios = [];
 _exists = false;
@@ -17,8 +17,8 @@ if ([_tipo] call BIS_fnc_taskExists) exitWith {if (!_silencio) then {[petros,"gl
 if (_tipo == "AS") then
 	{
 	_sitios = aeropuertos + ciudades + (controles select {!(isOnRoad getMarkerPos _x)});
-	_sitios = _sitios select {lados getVariable [_x,sideUnknown] != buenos};
-	if ((count _sitios > 0) and ({lados getVariable [_x,sideUnknown] == malos} count aeropuertos > 0)) then
+	_sitios = _sitios select {lados getVariable [_x,sideUnknown] != friendlySide};
+	if ((count _sitios > 0) and ({lados getVariable [_x,sideUnknown] == enemySide} count aeropuertos > 0)) then
 		{
 		//_posibles = _sitios select {((getMarkerPos _x distance _posbase < distanciaMiss) and (not(spawner getVariable _x)))};
 		for "_i" from 0 to ((count _sitios) - 1) do
@@ -29,7 +29,7 @@ if (_tipo == "AS") then
 				{
 				if (_sitio in controles) then
 					{
-					_marcadores = marcadores select {(getMarkerPos _x distance _pos < distanciaSPWN) and (lados getVariable [_x,sideUnknown] == buenos)};
+					_marcadores = marcadores select {(getMarkerPos _x distance _pos < spawnDistanceDefault) and (lados getVariable [_x,sideUnknown] == friendlySide)};
 					_marcadores = _marcadores - ["Synd_HQ"];
 					_frontera = if (count _marcadores > 0) then {true} else {false};
 					if (_frontera) then
@@ -61,7 +61,7 @@ if (_tipo == "AS") then
 if (_tipo == "CON") then
 	{
 	_sitios = (controles select {(isOnRoad (getMarkerPos _x))})+ puestos + recursos;
-	_sitios = _sitios select {lados getVariable [_x,sideUnknown] != buenos};
+	_sitios = _sitios select {lados getVariable [_x,sideUnknown] != friendlySide};
 	if (count _sitios > 0) then
 		{
 		_posibles = _sitios select {(getMarkerPos _x distance _posbase < distanciaMiss)};
@@ -82,7 +82,7 @@ if (_tipo == "CON") then
 	};
 if (_tipo == "DES") then
 	{
-	_sitios = aeropuertos select {lados getVariable [_x,sideUnknown] != buenos};
+	_sitios = aeropuertos select {lados getVariable [_x,sideUnknown] != friendlySide};
 	_sitios = _sitios + antenas;
 	if (count _sitios > 0) then
 		{
@@ -99,7 +99,7 @@ if (_tipo == "DES") then
 				else
 					{
 					_cercano = [marcadores, getPos _sitio] call BIS_fnc_nearestPosition;
-					if (lados getVariable [_cercano,sideUnknown] == malos) then {_posibles pushBack _sitio};
+					if (lados getVariable [_cercano,sideUnknown] == enemySide) then {_posibles pushBack _sitio};
 					};
 				};
 			};
@@ -122,7 +122,7 @@ if (_tipo == "DES") then
 if (_tipo == "LOG") then
 	{
 	_sitios = puestos + ciudades - destroyedCities;
-	_sitios = _sitios select {lados getVariable [_x,sideUnknown] != buenos};
+	_sitios = _sitios select {lados getVariable [_x,sideUnknown] != friendlySide};
 	if (random 100 < 20) then {_sitios = _sitios + bancos};
 	if (count _sitios > 0) then
 		{
@@ -157,7 +157,7 @@ if (_tipo == "LOG") then
 			if (_sitio in bancos) then
 				{
 				_ciudad = [ciudades, _pos] call BIS_fnc_nearestPosition;
-				if (lados getVariable [_ciudad,sideUnknown] == buenos) then {_posibles = _posibles - [_sitio]};
+				if (lados getVariable [_ciudad,sideUnknown] == friendlySide) then {_posibles = _posibles - [_sitio]};
 				};
 			};
 		};
@@ -180,7 +180,7 @@ if (_tipo == "LOG") then
 if (_tipo == "RES") then
 	{
 	_sitios = aeropuertos + puestos + ciudades;
-	_sitios = _sitios select {lados getVariable [_x,sideUnknown] != buenos};
+	_sitios = _sitios select {lados getVariable [_x,sideUnknown] != friendlySide};
 	if (count _sitios > 0) then
 		{
 		for "_i" from 0 to ((count _sitios) - 1) do
@@ -209,7 +209,7 @@ if (_tipo == "CONVOY") then
 	if (!bigAttackInProgress) then
 		{
 		_sitios = (aeropuertos + recursos + fabricas + puertos + puestos - blackListDest) + (ciudades select {count (garrison getVariable [_x,[]]) < 10});
-		_sitios = _sitios select {(lados getVariable [_x,sideUnknown] != buenos) and !(_x in blackListDest)};
+		_sitios = _sitios select {(lados getVariable [_x,sideUnknown] != friendlySide) and !(_x in blackListDest)};
 		if (count _sitios > 0) then
 			{
 			for "_i" from 0 to ((count _sitios) - 1) do
@@ -219,9 +219,9 @@ if (_tipo == "CONVOY") then
 				_base = [_sitio] call A3A_fnc_findBasesForConvoy;
 				if ((_pos distance _posbase < (distanciaMiss*2)) and (_base !="")) then
 					{
-					if ((_sitio in ciudades) and (lados getVariable [_sitio,sideUnknown] == buenos)) then
+					if ((_sitio in ciudades) and (lados getVariable [_sitio,sideUnknown] == friendlySide)) then
 						{
-						if (lados getVariable [_base,sideUnknown] == malos) then
+						if (lados getVariable [_base,sideUnknown] == enemySide) then
 							{
 							_datos = server getVariable _sitio;
 							_prestigeOPFOR = _datos select 2;
@@ -234,7 +234,7 @@ if (_tipo == "CONVOY") then
 						}
 					else
 						{
-						if (((lados getVariable [_sitio,sideUnknown] == malos) and (lados getVariable [_base,sideUnknown] == malos)) or ((lados getVariable [_sitio,sideUnknown] == muyMalos) and (lados getVariable [_base,sideUnknown] == muyMalos))) then {_posibles pushBack _sitio};
+						if (((lados getVariable [_sitio,sideUnknown] == enemySide) and (lados getVariable [_base,sideUnknown] == enemySide)) or ((lados getVariable [_sitio,sideUnknown] == oppositionSide) and (lados getVariable [_base,sideUnknown] == oppositionSide))) then {_posibles pushBack _sitio};
 						};
 					};
 				};

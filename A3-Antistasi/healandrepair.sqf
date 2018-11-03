@@ -1,8 +1,8 @@
 
 private ["_posHQ"];
-_posHQ = getMarkerPos respawnBuenos;
+_posHQ = getMarkerPos friendlyRespawn;
 
-{if ((side group _x == buenos) and (_x distance _posHQ < 50)) then
+{if ((side group _x == friendlySide) and (_x distance _posHQ < 50)) then
 	{
 	if (hayACEMedical) then
 		{

@@ -30,9 +30,9 @@ else
 	};
 
 
-[[buenos,civilian],"CON",[_texto,_taskName,_marcador],_posicion,false,0,true,"Target",true] call BIS_fnc_taskCreate;
+[[friendlySide,civilian],"CON",[_texto,_taskName,_marcador],_posicion,false,0,true,"Target",true] call BIS_fnc_taskCreate;
 misiones pushBack ["CON","CREATED"]; publicVariable "misiones";
-waitUntil {sleep 1; (dateToNumber date > _fechalimnum) or (lados getVariable [_marcador,sideUnknown] == buenos)};
+waitUntil {sleep 1; (dateToNumber date > _fechalimnum) or (lados getVariable [_marcador,sideUnknown] == friendlySide)};
 
 if (dateToNumber date > _fechalimnum) then
 	{
@@ -59,7 +59,7 @@ else
 		[0,400] remoteExec ["A3A_fnc_resourcesFIA",2];
 		[-10,0,_posicion] remoteExec ["A3A_fnc_citySupportChange",2];
 		[1200] remoteExec ["A3A_fnc_timingCA",2];
-		{if (isPlayer _x) then {[20,_x] call A3A_fnc_playerScoreAdd}} forEach ([500,0,_posicion,buenos] call A3A_fnc_distanceUnits);
+		{if (isPlayer _x) then {[20,_x] call A3A_fnc_playerScoreAdd}} forEach ([500,0,_posicion,friendlySide] call A3A_fnc_distanceUnits);
 		[20,theBoss] call A3A_fnc_playerScoreAdd;
 		}
 	else
@@ -67,7 +67,7 @@ else
 		[0,200] remoteExec ["A3A_fnc_resourcesFIA",2];
 		[-5,0,_posicion] remoteExec ["A3A_fnc_citySupportChange",2];
 		[600] remoteExec ["A3A_fnc_timingCA",2];
-		{if (isPlayer _x) then {[10,_x] call A3A_fnc_playerScoreAdd}} forEach ([500,0,_posicion,buenos] call A3A_fnc_distanceUnits);
+		{if (isPlayer _x) then {[10,_x] call A3A_fnc_playerScoreAdd}} forEach ([500,0,_posicion,friendlySide] call A3A_fnc_distanceUnits);
 		[10,theBoss] call A3A_fnc_playerScoreAdd;
 		};
 	};

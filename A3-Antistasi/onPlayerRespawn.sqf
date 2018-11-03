@@ -13,7 +13,7 @@ if !(hayACEMedical) then
 	_viejo setVariable ["INCAPACITATED",false,true];
 	_nuevo setVariable ["INCAPACITATED",false,true];
 	};
-if (side group player == buenos) then
+if (side group player == friendlySide) then
 	{
 	_owner = _viejo getVariable ["owner",_viejo];
 
@@ -72,7 +72,7 @@ if (side group player == buenos) then
 		_player = _this select 0;
 		if (captive _player) then
 			{
-			if ({if (((side _x == malos) or (side _x == muyMalos)) and (_x distance player < 300)) exitWith {1}} count allUnits > 0) then
+			if ({if (((side _x == enemySide) or (side _x == oppositionSide)) and (_x distance player < 300)) exitWith {1}} count allUnits > 0) then
 				{
 				[_player,false] remoteExec ["setCaptive",0,_player];
 				_player setCaptive false;
@@ -110,7 +110,7 @@ if (side group player == buenos) then
 			_tipo = typeOf _contenedor;
 			if (((_contenedor isKindOf "Man") and (!alive _contenedor)) or (_tipo == NATOAmmoBox) or (_tipo == CSATAmmoBox)) then
 				{
-				if ({if (((side _x== muyMalos) or (side _x== malos)) and (_x knowsAbout _jugador > 1.4)) exitWith {1}} count allUnits > 0) then
+				if ({if (((side _x== oppositionSide) or (side _x== enemySide)) and (_x knowsAbout _jugador > 1.4)) exitWith {1}} count allUnits > 0) then
 					{
 					[_jugador,false] remoteExec ["setCaptive",0,_jugador];
 					_jugador setCaptive false;
@@ -183,7 +183,7 @@ if (side group player == buenos) then
 		_player = _this select 0;
 		if (captive _player) then
 			{
-			if ({((side _x== muyMalos) or (side _x== malos)) and (_x knowsAbout player > 1.4)} count allUnits > 0) then
+			if ({((side _x== oppositionSide) or (side _x== enemySide)) and (_x knowsAbout player > 1.4)} count allUnits > 0) then
 				{
 				[_player,false] remoteExec ["setCaptive",0,_player];
 				_player setCaptive false;

@@ -336,7 +336,7 @@ if (hmd _unit == "") then
 		};
 	};
 _hayCaja = false;
-if (not(headgear _unit in cascos)) then
+if (not(headgear _unit in helmets)) then
 	{
 	_necesita = true;
 	_hayCaja = false;
@@ -344,7 +344,7 @@ if (not(headgear _unit in cascos)) then
 	_muertos = allDead select {(_x distance _unit < 51) and (!(_x getVariable ["busy",false]))};
 	{
 	_muerto = _x;
-	if (((headgear _muerto) in cascos) and (_unit distance _muerto < _distancia)) then
+	if (((headgear _muerto) in helmets) and (_unit distance _muerto < _distancia)) then
 		{
 		_target = _muerto;
 		_hayCaja = true;

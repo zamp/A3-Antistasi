@@ -11,27 +11,27 @@ _salir = true;
 _enemy1 = "";
 _enemy2 = "";
 
-if ((_lado == buenos) and (lados getVariable [_marcador,sideUnknown] == buenos)) then
+if ((_lado == friendlySide) and (lados getVariable [_marcador,sideUnknown] == friendlySide)) then
 	{
 	_salir = false;
-	_enemy1 = muyMalos;
-	_enemy2 = malos;
+	_enemy1 = oppositionSide;
+	_enemy2 = enemySide;
 	}
 else
 	{
-	if ((_lado == malos) and (lados getVariable [_marcador,sideUnknown] == malos)) then
+	if ((_lado == enemySide) and (lados getVariable [_marcador,sideUnknown] == enemySide)) then
 		{
 		_salir = false;
-		_enemy1 = muyMalos;
-		_enemy2 = buenos;
+		_enemy1 = oppositionSide;
+		_enemy2 = friendlySide;
 		}
 	else
 		{
-		if ((_lado == muyMalos) and (lados getVariable [_marcador,sideUnknown] == muyMalos)) then
+		if ((_lado == oppositionSide) and (lados getVariable [_marcador,sideUnknown] == oppositionSide)) then
 			{
 			_salir = false;
-			_enemy1 = malos;
-			_enemy2 = buenos;
+			_enemy1 = enemySide;
+			_enemy2 = friendlySide;
 			};
 		};
 	};

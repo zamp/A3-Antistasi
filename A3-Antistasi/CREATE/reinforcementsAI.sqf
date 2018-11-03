@@ -1,5 +1,5 @@
 private ["_aeropuertos","_reinfPlaces","_aeropuerto","_numero","_numGarr","_numReal","_lado","_posibles","_cuenta","_sitio","_posicion"];
-_aeropuertos = aeropuertos select {(lados getVariable [_x,sideUnknown] != buenos) and (spawner getVariable _x == 2)};
+_aeropuertos = aeropuertos select {(lados getVariable [_x,sideUnknown] != friendlySide) and (spawner getVariable _x == 2)};
 if (count _aeropuertos == 0) exitWith {};
 _reinfPlaces = [];
 {
@@ -12,12 +12,12 @@ if (_numReal + 4 <= _numGarr) then
 	{
 	if (_numReal + 8 <= _numGarr) then
 		{
-		if (_lado == malos) then {[selectRandom gruposNATOSquad,_lado,_aeropuerto,0] remoteExec ["A3A_fnc_garrisonUpdate",2]} else {[selectRandom gruposCSATSquad,_lado,_aeropuerto,0] remoteExec ["A3A_fnc_garrisonUpdate",2]};
+		if (_lado == enemySide) then {[selectRandom gruposNATOSquad,_lado,_aeropuerto,0] remoteExec ["A3A_fnc_garrisonUpdate",2]} else {[selectRandom gruposCSATSquad,_lado,_aeropuerto,0] remoteExec ["A3A_fnc_garrisonUpdate",2]};
 		_numero = 0;
 		}
 	else
 		{
-		if (_lado == malos) then {[selectRandom gruposNATOmid,_lado,_aeropuerto,0] remoteExec ["A3A_fnc_garrisonUpdate",2]} else {[selectRandom gruposCSATmid,_lado,_aeropuerto,0] remoteExec ["A3A_fnc_garrisonUpdate",2]};
+		if (_lado == enemySide) then {[selectRandom gruposNATOmid,_lado,_aeropuerto,0] remoteExec ["A3A_fnc_garrisonUpdate",2]} else {[selectRandom gruposCSATmid,_lado,_aeropuerto,0] remoteExec ["A3A_fnc_garrisonUpdate",2]};
 		_numero = 4;
 		};
 	};
@@ -45,11 +45,11 @@ if ((_numero >= 4) and (reinfPatrols <= 4)) then
 		} forEach _posibles;
 		if (_sitio != "") then
 			{
-			if ({(getMarkerPos _x distance2d getMarkerPos _sitio < distanciaSPWN) and (lados getVariable [_x,sideUnknown] != _lado)} count aeropuertos == 0) then
+			if ({(getMarkerPos _x distance2d getMarkerPos _sitio < spawnDistanceDefault) and (lados getVariable [_x,sideUnknown] != _lado)} count aeropuertos == 0) then
 				{
-				if ({(_x distance2D _posicion < (2*distanciaSPWN)) or (_x distance2D (getMarkerPos _sitio) < (2*distanciaSPWN))} count allPlayers == 0) then
+				if ({(_x distance2D _posicion < (2*spawnDistanceDefault)) or (_x distance2D (getMarkerPos _sitio) < (2*spawnDistanceDefault))} count allPlayers == 0) then
 					{
-					_tipoGrupo = if (_lado == malos) then {if (_numero == 4) then {selectRandom gruposNATOmid} else {selectRandom gruposNATOSquad}} else {if (_numero == 4) then {selectRandom gruposCSATmid} else {selectRandom gruposCSATSquad}};
+					_tipoGrupo = if (_lado == enemySide) then {if (_numero == 4) then {selectRandom gruposNATOmid} else {selectRandom gruposNATOSquad}} else {if (_numero == 4) then {selectRandom gruposCSATmid} else {selectRandom gruposCSATSquad}};
 					[_tipoGrupo,_lado,_sitio,2] remoteExec ["A3A_fnc_garrisonUpdate",2];
 					}
 				else

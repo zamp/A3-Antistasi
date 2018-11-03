@@ -28,9 +28,9 @@ waitUntil {!garrisonIsChanging};
 {if (isNil _x) exitWith {_exit = true}} forEach ["_tipo","_lado","_marcador","_modo"];
 if (_exit) exitWith {diag_log format ["Antistasi: Error en garrisonUpdate al enviar mal datos: %1,%2,%3,%4",_tipo,_lado,_marcador,_modo]};
 garrisonIsChanging = true;
-if ((_lado == malos) and (!(lados getVariable [_marcador,sideUnknown] == malos))) exitWith {garrisonIsChanging = false};
-if ((_lado == muyMalos) and (!(lados getVariable [_marcador,sideUnknown] == muyMalos))) exitWith {garrisonIsChanging = false};
-if ((_lado == buenos) and (!(lados getVariable [_marcador,sideUnknown] == buenos))) exitWith {garrisonIsChanging = false};
+if ((_lado == enemySide) and (!(lados getVariable [_marcador,sideUnknown] == enemySide))) exitWith {garrisonIsChanging = false};
+if ((_lado == oppositionSide) and (!(lados getVariable [_marcador,sideUnknown] == oppositionSide))) exitWith {garrisonIsChanging = false};
+if ((_lado == friendlySide) and (!(lados getVariable [_marcador,sideUnknown] == friendlySide))) exitWith {garrisonIsChanging = false};
 _garrison = [];
 _garrison = _garrison + (garrison getVariable [_marcador,[]]);
 if (_modo == -1) then
@@ -46,5 +46,5 @@ else
 	};
 if (isNil "_garrison") exitWith {garrisonIsChanging = false};
 garrison setVariable [_marcador,_garrison,true];
-if (_lado == buenos) then {[_marcador] call A3A_fnc_mrkUpdate};
+if (_lado == friendlySide) then {[_marcador] call A3A_fnc_mrkUpdate};
 garrisonIsChanging = false;

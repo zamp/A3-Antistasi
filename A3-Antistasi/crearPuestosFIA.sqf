@@ -25,16 +25,16 @@ _mrk setMarkerShape "ICON";
 
 _fechalim = [date select 0, date select 1, date select 2, date select 3, (date select 4) + 60];
 _fechalimnum = dateToNumber _fechalim;
-[[buenos,civilian],"PuestosFIA",["We are sending a team to establish a Watchpost/Roadblock. Use HC to send the team to their destination","Post \ Roadblock Deploy",_mrk],_posicionTel,false,0,true,"Move",true] call BIS_fnc_taskCreate;
-//_tsk = ["PuestosFIA",[buenos,civilian],["We are sending a team to establish a Watchpost/Roadblock. Use HC to send the team to their destination","Post \ Roadblock Deploy",_mrk],_posicionTel,"CREATED",5,true,true,"Move"] call BIS_fnc_setTask;
+[[friendlySide,civilian],"PuestosFIA",["We are sending a team to establish a Watchpost/Roadblock. Use HC to send the team to their destination","Post \ Roadblock Deploy",_mrk],_posicionTel,false,0,true,"Move",true] call BIS_fnc_taskCreate;
+//_tsk = ["PuestosFIA",[friendlySide,civilian],["We are sending a team to establish a Watchpost/Roadblock. Use HC to send the team to their destination","Post \ Roadblock Deploy",_mrk],_posicionTel,"CREATED",5,true,true,"Move"] call BIS_fnc_setTask;
 //misiones pushBackUnique _tsk; publicVariable "misiones";
 _formato = [];
 {
 if (random 20 <= skillFIA) then {_formato pushBack (_x select 1)} else {_formato pushBack (_x select 0)};
 } forEach _tipoGrupo;
-_grupo = [getMarkerPos respawnBuenos, buenos, _formato] call A3A_fnc_spawnGroup;
+_grupo = [getMarkerPos friendlyRespawn, friendlySide, _formato] call A3A_fnc_spawnGroup;
 _grupo setGroupId ["Post"];
-_road = [getMarkerPos respawnBuenos] call A3A_fnc_findNearestGoodRoad;
+_road = [getMarkerPos friendlyRespawn] call A3A_fnc_findNearestGoodRoad;
 _pos = position _road findEmptyPosition [1,30,"B_G_Van_01_transport_F"];
 _camion = _tipoVeh createVehicle _pos;
 //_nul = [_grupo] spawn dismountFIA;
@@ -60,7 +60,7 @@ if ({(alive _x) and (_x distance _posicionTel < 10)} count units _grupo > 0) the
 		waitUntil {!(isPlayer leader _grupo)};
 		};
 	puestosFIA = puestosFIA + [_mrk]; publicVariable "puestosFIA";
-	lados setVariable [_mrk,buenos,true];
+	lados setVariable [_mrk,friendlySide,true];
 	marcadores = marcadores + [_mrk];
 	publicVariable "marcadores";
 	spawner setVariable [_mrk,2,true];
@@ -68,7 +68,7 @@ if ({(alive _x) and (_x distance _posicionTel < 10)} count units _grupo > 0) the
 	//["PuestosFIA", "SUCCEEDED",true] spawn BIS_fnc_taskSetState;
 	_nul = [-5,5,_posiciontel] remoteExec ["A3A_fnc_citySupportChange",2];
 	_mrk setMarkerType "loc_bunker";
-	_mrk setMarkerColor colorBuenos;
+	_mrk setMarkerColor friendlyColor;
 	_mrk setMarkerText _texto;
 	if (_esCarretera) then
 		{

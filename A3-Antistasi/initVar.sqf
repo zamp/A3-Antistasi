@@ -1,57 +1,49 @@
-//Antistasi var settings
-//If some setting can be modified it will be commented with a // after it.
-//Make changes at your own risk!!
-//You do not have enough balls to make any modification and after making a Bug report because something is wrong. You don't wanna be there. Believe me.
-//Not commented lines cannot be changed.
-//Don't touch them.
+// Antistasi var settings
+// If some setting can be modified it will be commented with a // after it.
+// Make changes at your own risk!!
+// You do not have enough balls to make any modification and after making a Bug report because something is wrong. You don't wanna be there. Believe me.
+// Not commented lines cannot be changed.
+// Don't touch them.
 
 antistasiVersion = "v 1.4.0.0";
 
+debug = false;
 
-debug = false;//debug variable, not useful for everything..
-
-cleantime = 3600;//time to delete dead bodies, vehicles etc..
-distanciaSPWN = 1000;//initial spawn distance. Less than 1Km makes parked vehicles spawn in your nose while you approach.
-distanciaSPWN1 = 1300;
-distanciaSPWN2 = 500;
+cleantime = 3600; // time to delete dead bodies, vehicles etc..
+spawnDistanceDefault = 1000; // initial spawn distance. Less than 1Km makes parked vehicles spawn in your nose while you approach.
+spawnDistanceFar = 1300;
+spawnDistanceNear = 500;
 musicON = if (isMultiplayer) then {false} else {true};
 civPerc = 35;
 autoHeal = false;
 recruitCooldown = 0;
 savingClient = false;
 incomeRep = false;
-//distanciaMiss = 2500;
-/*
-minMags = 20;
-
-minPacks = 20;
-minItems = 20;
-minOptics = 12;*/
 maxUnits = 140;
 
-buenos = side group petros;
-malos = if (buenos == independent) then {west} else {independent};
-muyMalos = east;
+friendlySide = side group petros;
+enemySide = if (friendlySide == independent) then {west} else {independent};
+oppositionSide = east;
 
-colorBuenos = if (buenos == independent) then {"colorGUER"} else {"colorBLUFOR"};
-colorMalos = if (buenos == independent) then {"colorBLUFOR"} else {"colorGUER"};
-colorMuyMalos = "colorOPFOR";
+friendlyColor = if (friendlySide == independent) then {"colorGUER"} else {"colorBLUFOR"};
+enemyColor = if (friendlySide == independent) then {"colorBLUFOR"} else {"colorGUER"};
+oppositionColor = "colorOPFOR";
 
-respawnBuenos = if (buenos == independent) then {"respawn_guerrila"} else {"respawn_west"};
-respawnMalos = if (buenos == independent) then {"respawn_west"} else {"respawn_guerrila"};
-posHQ = getMarkerPos respawnBuenos;
+friendlyRespawn = if (friendlySide == independent) then {"respawn_guerrila"} else {"respawn_west"};
+enemyRespawn = if (friendlySide == independent) then {"respawn_west"} else {"respawn_guerrila"};
+posHQ = getMarkerPos friendlyRespawn;
 
 allMagazines = [];
 _cfgmagazines = configFile >> "cfgmagazines";
 for "_i" from 0 to (count _cfgMagazines) -1 do
-	{
+{
 	_magazine = _cfgMagazines select _i;
 	if (isClass _magazine) then
-		{
+	{
 		_nombre = configName (_magazine);
 		allMagazines pushBack _nombre;
-		};
 	};
+};
 
 arifles = [];
 srifles = [];
@@ -59,7 +51,7 @@ mguns = [];
 hguns = [];
 mlaunchers = [];
 rlaunchers = [];
-cascos = [];
+helmets = [];
 //vests = [];
 
 hayRHS = false;
@@ -116,7 +108,7 @@ if (not(_nombre in _yaMetidos)) then
 		case "Handgun": {hguns pushBack _nombre};
 		case "MissileLauncher": {mlaunchers pushBack _nombre};
 		case "RocketLauncher": {rlaunchers pushBack _nombre};
-		case "Headgear": {cascos pushBack _nombre};
+		case "Headgear": {helmets pushBack _nombre};
 		//case "Vest": {vests pushBack _nombre};
 		};
 
@@ -133,7 +125,7 @@ myCustomMod = false;
 if ("LIB_PTRD" in arifles) then
 {
 	isFIA = true;
-	cascos = [];
+	helmets = [];
 	humo = ["LIB_RDG","LIB_NB39"];
 }
 else
@@ -142,7 +134,7 @@ else
 	if ("ffaa_armas_hkg36k_normal" in arifles) then {isFFAA = true};
 	if ("rhs_weap_m4a1_d" in arifles) then {activeUSAF = true; hayRHS = true};
 	if ("rhs_weap_m92" in arifles) then {activeGREF = true; hayRHS = true} else {mguns pushBack "LMG_Mk200_BI_F"};
-	cascos = cascos select {getNumber (configfile >> "CfgWeapons" >> _x >> "ItemInfo" >> "HitpointsProtectionInfo" >> "Head" >> "armor") > 2};
+	helmets = helmets select {getNumber (configfile >> "CfgWeapons" >> _x >> "ItemInfo" >> "HitpointsProtectionInfo" >> "Head" >> "armor") > 2};
 	humo = ["SmokeShell","SmokeShellRed","SmokeShellGreen","SmokeShellBlue","SmokeShellYellow","SmokeShellPurple","SmokeShellOrange"];
 };
 
@@ -220,7 +212,7 @@ if (!isFIA) then
 	}
 	else
 	{
-		if (buenos == independent) then {call compile preProcessFileLineNumbers "Templates\malosRHSUSAF.sqf"} else {call compile preProcessFileLineNumbers "Templates\buenosRHSUSAF.sqf"};
+		if (friendlySide == independent) then {call compile preProcessFileLineNumbers "Templates\malosRHSUSAF.sqf"} else {call compile preProcessFileLineNumbers "Templates\buenosRHSUSAF.sqf"};
 	};
 	if (!activeAFRF) then {call compile preProcessFileLineNumbers "Templates\muyMalosVanilla.sqf"} else {call compile preProcessFileLineNumbers "Templates\muyMalosRHSAFRF.sqf"};
 
@@ -230,7 +222,7 @@ if (!isFIA) then
 	}
 	else
 	{
-		if (buenos == independent) then {call compile preProcessFileLineNumbers "Templates\buenosRHSGREF.sqf"} else {call compile preProcessFileLineNumbers "Templates\malosRHSGREF.sqf"};
+		if (friendlySide == independent) then {call compile preProcessFileLineNumbers "Templates\buenosRHSGREF.sqf"} else {call compile preProcessFileLineNumbers "Templates\malosRHSGREF.sqf"};
 	};
 }
 else
@@ -430,7 +422,7 @@ else
 listMilBld = ["Land_Cargo_Tower_V1_F","Land_Cargo_Tower_V1_No1_F","Land_Cargo_Tower_V1_No2_F","Land_Cargo_Tower_V1_No3_F","Land_Cargo_Tower_V1_No4_F","Land_Cargo_Tower_V1_No5_F","Land_Cargo_Tower_V1_No6_F","Land_Cargo_Tower_V1_No7_F","Land_Cargo_Tower_V2_F", "Land_Cargo_Tower_V3_F","Land_Cargo_HQ_V1_F","Land_Cargo_HQ_V2_F","Land_Cargo_HQ_V3_F","Land_Cargo_Patrol_V1_F","Land_Cargo_Patrol_V2_F","Land_Cargo_Patrol_V3_F","Land_HelipadSquare_F"];
 listbld = ["Land_Cargo_Tower_V1_F","Land_Cargo_Tower_V1_No1_F","Land_Cargo_Tower_V1_No2_F","Land_Cargo_Tower_V1_No3_F","Land_Cargo_Tower_V1_No4_F","Land_Cargo_Tower_V1_No5_F","Land_Cargo_Tower_V1_No6_F","Land_Cargo_Tower_V1_No7_F","Land_Cargo_Tower_V2_F", "Land_Cargo_Tower_V3_F"];
 swoopShutUp = ["V_RebreatherIA","G_Diving"];
-difficultyCoef = if !(isMultiplayer) then {0} else {floor ((({side group _x == buenos} count playableUnits) - ({side group _x != buenos} count playableUnits)) / 5)};
+difficultyCoef = if !(isMultiplayer) then {0} else {floor ((({side group _x == friendlySide} count playableUnits) - ({side group _x != friendlySide} count playableUnits)) / 5)};
 if (side (group petros) == west) then {swoopShutUp pushBack "U_B_Wetsuit"} else {swoopShutUp pushBack "U_I_Wetsuit"};
 
 //Pricing values for soldiers, vehicles
@@ -698,7 +690,7 @@ if (isClass(configFile >> "cfgPatches" >> "acre_main")) then
 	unlockedItems = unlockedItems + ["ACRE_PRC343","ACRE_PRC148","ACRE_PRC152","ACRE_PRC77","ACRE_PRC117F"];
 	};
 
-//allItems = allItems + itemsAAF + opticasAAF + _vests + cascos + NVGoggles;
+//allItems = allItems + itemsAAF + opticasAAF + _vests + helmets + NVGoggles;
 
 if (worldName == "Tanoa") then
 	{

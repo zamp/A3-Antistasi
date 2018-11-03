@@ -44,7 +44,7 @@ fn_LoadStat =
 	"prestigeNATO","prestigeCSAT", "hr","planesAAFcurrent","helisAAFcurrent","APCAAFcurrent","tanksAAFcurrent","armas","items","mochis","municion","fecha", "WitemsPlayer","prestigeOPFOR","prestigeBLUFOR","resourcesAAF","resourcesFIA","skillFIA"];
 */
 specialVarLoads =
-["puestosFIA","minas","estaticas","cuentaCA","antenas","mrkNATO","mrkSDK","prestigeNATO","prestigeCSAT","posHQ", "hr","armas","items","mochis","municion","fecha", "prestigeOPFOR","prestigeBLUFOR","resourcesFIA","skillFIA","distanciaSPWN","civPerc","maxUnits","destroyedCities","garrison","tasks","scorePlayer","rankPlayer","smallCAmrk","dinero","miembros","vehInGarage","destroyedBuildings","personalGarage","idlebases","idleassets","chopForest","weather","killZones","jna_dataList","controlesSDK","loadoutPlayer","mrkCSAT","nextTick","bombRuns","dificultad","gameMode"];
+["puestosFIA","minas","estaticas","cuentaCA","antenas","mrkNATO","mrkSDK","prestigeNATO","prestigeCSAT","posHQ", "hr","armas","items","mochis","municion","fecha", "prestigeOPFOR","prestigeBLUFOR","resourcesFIA","skillFIA","spawnDistanceDefault","civPerc","maxUnits","destroyedCities","garrison","tasks","scorePlayer","rankPlayer","smallCAmrk","dinero","miembros","vehInGarage","destroyedBuildings","personalGarage","idlebases","idleassets","chopForest","weather","killZones","jna_dataList","controlesSDK","loadoutPlayer","mrkCSAT","nextTick","bombRuns","dificultad","gameMode"];
 //THIS FUNCTIONS HANDLES HOW STATS ARE LOADED
 fn_SetStat =
 {
@@ -70,8 +70,8 @@ fn_SetStat =
 				gameMode = _varValue;
 				if (gameMode != 1) then
 					{
-					malos setFriend [muyMalos,1];
-				    muyMalos setFriend [malos,1];
+					enemySide setFriend [oppositionSide,1];
+				    oppositionSide setFriend [enemySide,1];
 				    if (gameMode == 3) then {"CSAT_carrier" setMarkerAlpha 0};
 				    if (gameMode == 4) then {"NATO_carrier" setMarkerAlpha 0};
 					};
@@ -81,13 +81,13 @@ fn_SetStat =
 		if(_varName == 'nextTick') then {nextTick = time + _varValue};
 		if(_varName == 'miembros') then {miembros = +_varValue; publicVariable "miembros"};
 		if(_varName == 'smallCAmrk') then {smallCAmrk = +_varValue};
-		if(_varName == 'mrkNATO') then {{lados setVariable [_x,malos,true]} forEach _varValue;};
-		if(_varName == 'mrkCSAT') then {{lados setVariable [_x,muyMalos,true]} forEach _varValue;};
-		if(_varName == 'mrkSDK') then {{lados setVariable [_x,buenos,true]} forEach _varValue;};
+		if(_varName == 'mrkNATO') then {{lados setVariable [_x,enemySide,true]} forEach _varValue;};
+		if(_varName == 'mrkCSAT') then {{lados setVariable [_x,oppositionSide,true]} forEach _varValue;};
+		if(_varName == 'mrkSDK') then {{lados setVariable [_x,friendlySide,true]} forEach _varValue;};
 		if(_varName == 'controlesSDK') then
 			{
 			{
-			lados setVariable [_x,buenos,true]
+			lados setVariable [_x,friendlySide,true]
 			} forEach _varValue;
 			};
 		if(_varName == 'chopForest') then {chopForest = _varValue; publicVariable "chopForest"};
@@ -135,7 +135,7 @@ fn_SetStat =
 			server setVariable [_x,_coste,true];
 			} forEach soldadosSDK;
 			};
-		if(_varName == 'distanciaSPWN') then {distanciaSPWN = _varValue; distanciaSPWN1 = distanciaSPWN * 1.3; distanciaSPWN2 = distanciaSPWN /2; publicVariable "distanciaSPWN";publicVariable "distanciaSPWN1";publicVariable "distanciaSPWN2"};
+		if(_varName == 'spawnDistanceDefault') then {spawnDistanceDefault = _varValue; spawnDistanceFar = spawnDistanceDefault * 1.3; spawnDistanceNear = spawnDistanceDefault /2; publicVariable "spawnDistanceDefault";publicVariable "spawnDistanceFar";publicVariable "spawnDistanceNear"};
 		if(_varName == 'civPerc') then {civPerc = _varValue; if (civPerc < 1) then {civPerc = 35}; publicVariable "civPerc"};
 		if(_varName == 'maxUnits') then {maxUnits=_varValue; publicVariable "maxUnits"};
 		if(_varName == 'vehInGarage') then {vehInGarage= +_varValue; publicVariable "vehInGarage"};
@@ -188,12 +188,12 @@ fn_SetStat =
 				_mrk = createMarker [format ["FIApost%1", random 1000], _posicion];
 				_mrk setMarkerShape "ICON";
 				_mrk setMarkerType "loc_bunker";
-				_mrk setMarkerColor colorBuenos;
+				_mrk setMarkerColor friendlyColor;
 				if (isOnRoad _posicion) then {_mrk setMarkerText format ["%1 Roadblock",nameBuenos]} else {_mrk setMarkerText format ["%1 Watchpost",nameBuenos]};
 				spawner setVariable [_mrk,2,true];
 				if (count _garrison > 0) then {garrison setVariable [_mrk,_garrison,true]};
 				puestosFIA pushBack _mrk;
-				lados setVariable [_mrk,buenos,true];
+				lados setVariable [_mrk,friendlySide,true];
 				} forEach _varvalue;
 				};
 			};
@@ -267,10 +267,10 @@ fn_SetStat =
 			_posHQ = if (count _varValue >3) then {_varValue select 0} else {_varValue};
 			{if (getMarkerPos _x distance _posHQ < 1000) then
 				{
-				lados setVariable [_x,buenos,true];
+				lados setVariable [_x,friendlySide,true];
 				};
 			} forEach controles;
-			respawnBuenos setMarkerPos _posHQ;
+			friendlyRespawn setMarkerPos _posHQ;
 			petros setPos _posHQ;
 			"Synd_HQ" setMarkerPos _posHQ;
 			if (chopForest) then
@@ -292,7 +292,7 @@ fn_SetStat =
 				cajaVeh setDir ((_varValue select 5) select 0);
 				cajaVeh setPos ((_varValue select 5) select 1);
 				};
-			{_x setPos _posHQ} forEach (playableUnits select {side _x == buenos});
+			{_x setPos _posHQ} forEach (playableUnits select {side _x == friendlySide});
 			};
 		if(_varname == 'estaticas') then
 			{

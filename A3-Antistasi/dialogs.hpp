@@ -1029,7 +1029,7 @@ class spawn_config 			{
 			y = 0.317959 * safezoneH + safezoneY;
 			w = 0.175015 * safezoneW;
 			h = 0.0560125 * safezoneH;
-			action = "if (player == theBoss) then {if (distanciaSPWN < 2000) then {distanciaSPWN = distanciaSPWN + 100; distanciaSPWN1 = distanciaSPwN * 1.3; distanciaSPWN2 = distanciaSPWN /2; publicVariable ""distanciaSPWN"";publicVariable ""distanciaSPWN1"";publicVariable ""distanciaSPWN2""}; hint format [""Spawn Distance Set to %1 meters. Be careful, this may affect game performance"",distanciaSPWN]} else {hint ""Only Player Commander has access to this function""};";
+			action = "if (player == theBoss) then {if (spawnDistanceDefault < 2000) then {spawnDistanceDefault = spawnDistanceDefault + 100; spawnDistanceFar = spawnDistanceDefault * 1.3; spawnDistanceNear = spawnDistanceDefault /2; publicVariable ""spawnDistanceDefault"";publicVariable ""spawnDistanceFar"";publicVariable ""spawnDistanceNear""}; hint format [""Spawn Distance Set to %1 meters. Be careful, this may affect game performance"",spawnDistanceDefault]} else {hint ""Only Player Commander has access to this function""};";
 		};
 		class HQ_button_Gstatic: RscButton
 		{
@@ -1039,7 +1039,7 @@ class spawn_config 			{
 			y = 0.317959 * safezoneH + safezoneY;
 			w = 0.175015 * safezoneW;
 			h = 0.0560125 * safezoneH;
-			action = "if (player == theBoss) then {if (distanciaSPWN > 600) then {distanciaSPWN = distanciaSPWN - 100; if (distanciaSPWN < 600) then {distanciaSPWN = 600}; distanciaSPWN1 = distanciaSPwN * 1.3; distanciaSPWN2 = distanciaSPWN /2; if (distanciaSPWN < 600) then {distanciaSPWN = 600};publicVariable ""distanciaSPWN"";publicVariable ""distanciaSPWN1"";publicVariable ""distanciaSPWN2"";}; hint format [""Spawn Distance Set to %1 meters"",distanciaSPWN]} else {hint ""Only Player Commander has access to this function""};";
+			action = "if (player == theBoss) then {if (spawnDistanceDefault > 600) then {spawnDistanceDefault = spawnDistanceDefault - 100; if (spawnDistanceDefault < 600) then {spawnDistanceDefault = 600}; spawnDistanceFar = spawnDistanceDefault * 1.3; spawnDistanceNear = spawnDistanceDefault /2; if (spawnDistanceDefault < 600) then {spawnDistanceDefault = 600};publicVariable ""spawnDistanceDefault"";publicVariable ""spawnDistanceFar"";publicVariable ""spawnDistanceNear"";}; hint format [""Spawn Distance Set to %1 meters"",spawnDistanceDefault]} else {hint ""Only Player Commander has access to this function""};";
 		};
 	};
 };

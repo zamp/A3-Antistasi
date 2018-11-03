@@ -6,7 +6,7 @@ _marcador = _this select 0;
 _posicion = getMarkerPos _marcador;
 _lado = lados getVariable [_marcador,sideUnknown];
 
-if ((_lado == buenos) or (_lado == sideUnknown)) exitWith {};
+if ((_lado == friendlySide) or (_lado == sideUnknown)) exitWith {};
 if ({if ((lados getVariable [_x,sideUnknown] != _lado) and (_posicion inArea _x)) exitWith {1}} count marcadores >1) exitWith {};
 _vehiculos = [];
 _soldados = [];
@@ -22,7 +22,7 @@ if (_esControl) then
 	{
 	if (gameMode != 4) then
 		{
-		if (_lado == malos) then
+		if (_lado == enemySide) then
 			{
 			if ((random 10 > (tierWar + difficultyCoef)) and (!([_marcador] call A3A_fnc_isFrontline))) then
 				{
@@ -32,7 +32,7 @@ if (_esControl) then
 		}
 	else
 		{
-		if (_lado == muyMalos) then
+		if (_lado == oppositionSide) then
 			{
 			if ((random 10 > (tierWar + difficultyCoef)) and (!([_marcador] call A3A_fnc_isFrontline))) then
 				{
@@ -64,14 +64,14 @@ if (_esControl) then
 			_vehiculos pushBack _bunker;
 			_bunker setDir _dirveh;
 			_pos = getPosATL _bunker;
-			_tipoVeh = if (_lado == malos) then {NATOMG} else {CSATMG};
+			_tipoVeh = if (_lado == enemySide) then {NATOMG} else {CSATMG};
 			_veh = _tipoVeh createVehicle _posicion;
 			_vehiculos pushBack _veh;
 			_veh setPosATL _pos;
 			_veh setDir _dirVeh;
 
 			_grupoE = createGroup _lado;
-			_tipoUnit = if (_lado == malos) then {staticCrewMalos} else {staticCrewMuyMalos};
+			_tipoUnit = if (_lado == enemySide) then {staticCrewMalos} else {staticCrewMuyMalos};
 			_unit = _grupoE createUnit [_tipoUnit, _posicion, [], 0, "NONE"];
 			_unit moveInGunner _veh;
 			_soldados pushBack _unit;
@@ -82,7 +82,7 @@ if (_esControl) then
 			_bunker setDir _dirveh + 180;
 			_pos = getPosATL _bunker;
 			_pos = [getPos _bunker, 6, getDir _bunker] call BIS_fnc_relPos;
-			_tipoVeh = if (_lado == malos) then {NATOFlag} else {CSATFlag};
+			_tipoVeh = if (_lado == enemySide) then {NATOFlag} else {CSATFlag};
 			_veh = createVehicle [_tipoVeh, _pos, [],0, "CAN_COLLIDE"];
 			_vehiculos pushBack _veh;
 			_veh = _tipoVeh createVehicle _posicion;
@@ -96,7 +96,7 @@ if (_esControl) then
 			sleep 1;
 			{_nul = [_x] call A3A_fnc_AIVEHinit} forEach _vehiculos;
 			};
-		_tipogrupo = if (_lado == malos) then {selectRandom gruposNATOmid} else {selectRandom gruposCSATmid};
+		_tipogrupo = if (_lado == enemySide) then {selectRandom gruposNATOmid} else {selectRandom gruposCSATmid};
 		_grupo = if !(isFIA) then {[_posicion,_lado, _tipogrupo,false,true] call A3A_fnc_spawnGroup} else {[_posicion,_lado, _tipogrupo] call A3A_fnc_spawnGroup};
 		if !(isNull _grupo) then
 			{
@@ -134,16 +134,16 @@ if (_esControl) then
 	}
 else
 	{
-	_marcadores = marcadores select {(getMarkerPos _x distance _posicion < distanciaSPWN) and (lados getVariable [_x,sideUnknown] == buenos)};
+	_marcadores = marcadores select {(getMarkerPos _x distance _posicion < spawnDistanceDefault) and (lados getVariable [_x,sideUnknown] == friendlySide)};
 	_marcadores = _marcadores - ["Synd_HQ"] - puestosFIA;
 	_frontera = if (count _marcadores > 0) then {true} else {false};
 	if (_frontera) then
 		{
 		_cfg = CSATSpecOp;
-		if (lados getVariable [_marcador,sideUnknown] == malos) then
+		if (lados getVariable [_marcador,sideUnknown] == enemySide) then
 			{
 			_cfg = NATOSpecOp;
-			_lado = malos;
+			_lado = enemySide;
 			};
 		_size = [_marcador] call A3A_fnc_sizeMarker;
 		if ({if (_x inArea _marcador) exitWith {1}} count allMines == 0) then
@@ -151,7 +151,7 @@ else
 			for "_i" from 1 to 60 do
 				{
 				_mina = createMine ["APERSMine",_posicion,[],_size];
-				if (_lado == malos) then {malos revealMine _mina} else {muyMalos revealMine _mina};
+				if (_lado == enemySide) then {enemySide revealMine _mina} else {oppositionSide revealMine _mina};
 				};
 			};
 		_grupo = [_posicion,_lado, _cfg] call A3A_fnc_spawnGroup;
@@ -160,7 +160,7 @@ else
 			{
 			sleep 1;
 			{_soldados pushBack _x} forEach units _grupo;
-			_tipoVeh = if (_lado == malos) then {vehNATOUAVSmall} else {vehCSATUAVSmall};
+			_tipoVeh = if (_lado == enemySide) then {vehNATOUAVSmall} else {vehCSATUAVSmall};
 			_uav = createVehicle [_tipoVeh, _posicion, [], 0, "FLY"];
 			createVehicleCrew _uav;
 			_vehiculos pushBack _uav;
@@ -212,46 +212,46 @@ while {(spawner getVariable _marcador != 2) and ({[_x,_marcador] call A3A_fnc_ca
 waitUntil {sleep 1;((spawner getVariable _marcador == 2))  or ({[_x,_marcador] call A3A_fnc_canConquer} count _soldados == 0)};
 
 _conquistado = false;
-_winner = malos;
+_winner = enemySide;
 if (spawner getVariable _marcador != 2) then
 	{
 	_conquistado = true;
 	_allUnits = allUnits select {(side _x != civilian) and (side _x != _lado) and (alive _x) and (!captive _x)};
 	_closest = [_allUnits,_posicion] call BIS_fnc_nearestPosition;
 	_winner = side _closest;
-	_loser = malos;
+	_loser = enemySide;
 	if (_esControl) then
 		{
 		["TaskSucceeded", ["", "Roadblock Destroyed"]] remoteExec ["BIS_fnc_showNotification",_winner];
 		["TaskFailed", ["", "Roadblock Lost"]] remoteExec ["BIS_fnc_showNotification",_lado];
 		};
-	if (lados getVariable [_marcador,sideUnknown] == malos) then
+	if (lados getVariable [_marcador,sideUnknown] == enemySide) then
 		{
-		if (_winner == muyMalos) then
+		if (_winner == oppositionSide) then
 			{
 			_nul = [-5,0,_posicion] remoteExec ["A3A_fnc_citySupportChange",2];
-			lados setVariable [_marcador,muyMalos,true];
+			lados setVariable [_marcador,oppositionSide,true];
 			}
 		else
 			{
-			lados setVariable [_marcador,buenos,true];
+			lados setVariable [_marcador,friendlySide,true];
 			};
 		}
 	else
 		{
-		_loser = muyMalos;
-		if (_winner == malos) then
+		_loser = oppositionSide;
+		if (_winner == enemySide) then
 			{
-			lados setVariable [_marcador,malos,true];
+			lados setVariable [_marcador,enemySide,true];
 			_nul = [5,0,_posicion] remoteExec ["A3A_fnc_citySupportChange",2];
 			}
 		else
 			{
-			lados setVariable [_marcador,buenos,true];
+			lados setVariable [_marcador,friendlySide,true];
 			_nul = [0,5,_posicion] remoteExec ["A3A_fnc_citySupportChange",2];
 			};
 		};
-	if (_winner == buenos) then {[[_posicion,_lado,"",false],"A3A_fnc_patrolCA"] remoteExec ["A3A_fnc_scheduler",2]};
+	if (_winner == friendlySide) then {[[_posicion,_lado,"",false],"A3A_fnc_patrolCA"] remoteExec ["A3A_fnc_scheduler",2]};
 	};
 
 waitUntil {sleep 1;(spawner getVariable _marcador == 2)};
@@ -259,7 +259,7 @@ waitUntil {sleep 1;(spawner getVariable _marcador == 2)};
 {_veh = _x;
 if (not(_veh in staticsToSave)) then
 	{
-	if ((!([distanciaSPWN,1,_x,buenos] call A3A_fnc_distanceUnits))) then {deleteVehicle _x}
+	if ((!([spawnDistanceDefault,1,_x,friendlySide] call A3A_fnc_distanceUnits))) then {deleteVehicle _x}
 	};
 } forEach _vehiculos;
 {
@@ -281,28 +281,28 @@ if (_conquistado) then
 		_fechalimnum = dateToNumber _fechalim;
 		waitUntil {sleep 60;(dateToNumber date > _fechalimnum)};
 		_base = [(marcadores - controles),_posicion] call BIS_fnc_nearestPosition;
-		if (lados getVariable [_base,sideUnknown] == malos) then
+		if (lados getVariable [_base,sideUnknown] == enemySide) then
 			{
-			lados setVariable [_marcador,malos,true];
+			lados setVariable [_marcador,enemySide,true];
 			}
 		else
 			{
-			if (lados getVariable [_base,sideUnknown] == muyMalos) then
+			if (lados getVariable [_base,sideUnknown] == oppositionSide) then
 				{
-				lados setVariable [_marcador,muyMalos,true];
+				lados setVariable [_marcador,oppositionSide,true];
 				};
 			};
 		}
 	else
 		{
 		/*
-		if ((!_esControl) and (_winner == buenos)) then
+		if ((!_esControl) and (_winner == friendlySide)) then
 			{
 			_size = [_marcador] call A3A_fnc_sizeMarker;
 			for "_i" from 1 to 60 do
 				{
 				_mina = createMine ["APERSMine",_posicion,[],_size];
-				if (_loser == malos) then {malos revealMine _mina} else {muyMalos revealMine _mina};
+				if (_loser == enemySide) then {enemySide revealMine _mina} else {oppositionSide revealMine _mina};
 				};
 			};
 		*/

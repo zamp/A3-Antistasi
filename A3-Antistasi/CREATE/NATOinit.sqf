@@ -34,7 +34,7 @@ else
 				_driver = driver _veh;
 				if (!isNull _driver) then
 					{
-					if (side group _driver != buenos) then
+					if (side group _driver != friendlySide) then
 						{
 						if !(_unit getVariable ["spawner",false]) then
 							{
@@ -58,7 +58,7 @@ else
 _skill = (tierWar + difficultyCoef) * 0.1 * skillMult;
 if ((faction _unit != factionGEN) and (faction _unit != factionFIA)) then
 	{
-	if (side _unit == malos) then
+	if (side _unit == enemySide) then
 		{
 		_skill = _skill + 0.1;
 		}
@@ -236,5 +236,5 @@ if (_revelar) then
 	{
 	{
 	_unit reveal [_x,1.5];
-	} forEach allUnits select {(vehicle _x isKindOf "Air") and (_x distance _unit <= distanciaSPWN)}
+	} forEach allUnits select {(vehicle _x isKindOf "Air") and (_x distance _unit <= spawnDistanceDefault)}
 	};

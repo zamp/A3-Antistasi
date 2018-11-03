@@ -6,7 +6,7 @@ _grupos = [];
 _base = "";
 _roads = [];
 
-_arrayAeropuertos = if (isFIA) then {(aeropuertos + puestos) select {((spawner getVariable _x != 0)) and (lados getVariable [_x,sideUnknown] != buenos)}} else {(puertos + aeropuertos + puestos) select {((spawner getVariable _x != 0)) and (lados getVariable [_x,sideUnknown] != buenos)}};
+_arrayAeropuertos = if (isFIA) then {(aeropuertos + puestos) select {((spawner getVariable _x != 0)) and (lados getVariable [_x,sideUnknown] != friendlySide)}} else {(puertos + aeropuertos + puestos) select {((spawner getVariable _x != 0)) and (lados getVariable [_x,sideUnknown] != friendlySide)}};
 
 _arrayAeropuertos1 = [];
 if !(isMultiplayer) then
@@ -15,7 +15,7 @@ if !(isMultiplayer) then
 	_aeropuerto = _x;
 	_pos = getMarkerPos _aeropuerto;
 	//if (allUnits findIf {(_x getVariable ["spawner",false]) and (_x distance2d _pos < distanceForLandAttack)} != -1) then {_arrayAeropuertos1 pushBack _aeropuerto};
-	if ([distanceForLandAttack,1,_pos,buenos] call A3A_fnc_distanceUnits) then {_arrayAeropuertos1 pushBack _aeropuerto};
+	if ([distanceForLandAttack,1,_pos,friendlySide] call A3A_fnc_distanceUnits) then {_arrayAeropuertos1 pushBack _aeropuerto};
 	} forEach _arrayAeropuertos;
 	}
 else
@@ -23,16 +23,16 @@ else
 	{
 	_aeropuerto = _x;
 	_pos = getMarkerPos _aeropuerto;
-	if (playableUnits findIf {(side (group _x) == buenos) and (_x distance2d _pos < distanceForLandAttack)} != -1) then {_arrayAeropuertos1 pushBack _aeropuerto};
+	if (playableUnits findIf {(side (group _x) == friendlySide) and (_x distance2d _pos < distanceForLandAttack)} != -1) then {_arrayAeropuertos1 pushBack _aeropuerto};
 	} forEach _arrayAeropuertos;
 	};
 if (_arrayAeropuertos1 isEqualTo []) exitWith {};
 
 _base = selectRandom _arrayAeropuertos1;
 _tipoCoche = "";
-_lado = malos;
+_lado = enemySide;
 _tipoPatrol = "LAND";
-if (lados getVariable [_base,sideUnknown] == malos) then
+if (lados getVariable [_base,sideUnknown] == enemySide) then
 	{
 	if ((_base in puertos) and ([vehNATOBoat] call A3A_fnc_vehAvailable)) then
 		{
@@ -54,7 +54,7 @@ if (lados getVariable [_base,sideUnknown] == malos) then
 	}
 else
 	{
-	_lado = muyMalos;
+	_lado = oppositionSide;
 	if ((_base in puertos) and ([vehCSATBoat] call A3A_fnc_vehAvailable)) then
 		{
 		_tipoCoche = vehCSATBoat;
@@ -181,12 +181,12 @@ while {alive _veh} do
 		};
 	};
 
-_enemigos = if (_lado == malos) then {muyMalos} else {malos};
+_enemigos = if (_lado == enemySide) then {oppositionSide} else {enemySide};
 
 {_unit = _x;
-waitUntil {sleep 1;!([distanciaSPWN,1,_unit,buenos] call A3A_fnc_distanceUnits) and !([distanciaSPWN,1,_unit,_enemigos] call A3A_fnc_distanceUnits)};deleteVehicle _unit} forEach _soldados;
+waitUntil {sleep 1;!([spawnDistanceDefault,1,_unit,friendlySide] call A3A_fnc_distanceUnits) and !([spawnDistanceDefault,1,_unit,_enemigos] call A3A_fnc_distanceUnits)};deleteVehicle _unit} forEach _soldados;
 
 {_veh = _x;
-if (!([distanciaSPWN,1,_veh,buenos] call A3A_fnc_distanceUnits) and !([distanciaSPWN,1,_veh,_enemigos] call A3A_fnc_distanceUnits)) then {deleteVehicle _veh}} forEach _vehiculos;
+if (!([spawnDistanceDefault,1,_veh,friendlySide] call A3A_fnc_distanceUnits) and !([spawnDistanceDefault,1,_veh,_enemigos] call A3A_fnc_distanceUnits)) then {deleteVehicle _veh}} forEach _vehiculos;
 {deleteGroup _x} forEach _grupos;
 AAFpatrols = AAFpatrols - 1;

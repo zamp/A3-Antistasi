@@ -48,8 +48,8 @@ if ((_type == "delete") and (count puestosFIA < 1)) exitWith
 {
 	hint "No Posts or Roadblocks deployed to delete"
 };
-if ((_type == "delete") and ({(alive _x) and (!captive _x) and ((side _x == malos) 
-	or (side _x == muyMalos)) and (_x distance _clickPos < 500)} count allUnits > 0)) exitWith 
+if ((_type == "delete") and ({(alive _x) and (!captive _x) and ((side _x == enemySide) 
+	or (side _x == oppositionSide)) and (_x distance _clickPos < 500)} count allUnits > 0)) exitWith 
 {
 	hint "You cannot delete a Post while enemies are near it"
 };
@@ -70,7 +70,7 @@ if (_type != "delete") then
 		_hr = _hr + 1;
 		};
 
-	//_formato = (configfile >> "CfgGroups" >> "buenos" >> "Guerilla" >> "Infantry" >> _tipogrupo);
+	//_formato = (configfile >> "CfgGroups" >> "friendlySide" >> "Guerilla" >> "Infantry" >> _tipogrupo);
 	//_unidades = [_formato] call groupComposition;
 	{_cost = _cost + (server getVariable (_x select 0)); _hr = _hr +1} forEach _tipoGrupo;
 }

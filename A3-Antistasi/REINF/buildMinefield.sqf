@@ -58,20 +58,20 @@ _mrk setMarkerType "hd_warning";
 _mrk setMarkerColor "ColorRed";
 _mrk setMarkerBrush "DiagGrid";
 _mrk setMarkerText _texto;
-[_mrk,0] remoteExec ["setMarkerAlpha",[malos,muyMalos]];
+[_mrk,0] remoteExec ["setMarkerAlpha",[enemySide,oppositionSide]];
 
-[[buenos,civilian],"Mines",[format ["An Engineer Team has been deployed at your command with High Command Option. Once they reach the position, they will start to deploy %1 mines in the area. Cover them in the meantime.",_cantidad],"Minefield Deploy",_mrk],_posicionTel,false,0,true,"map",true] call BIS_fnc_taskCreate;
-//_tsk = ["Mines",[buenos,civilian],[format ["An Engineer Team has been deployed at your command with High Command Option. Once they reach the position, they will start to deploy %1 mines in the area. Cover them in the meantime.",_cantidad],"Minefield Deploy",_mrk],_posicionTel,"CREATED",5,true,true,"map"] call BIS_fnc_setTask;
+[[friendlySide,civilian],"Mines",[format ["An Engineer Team has been deployed at your command with High Command Option. Once they reach the position, they will start to deploy %1 mines in the area. Cover them in the meantime.",_cantidad],"Minefield Deploy",_mrk],_posicionTel,false,0,true,"map",true] call BIS_fnc_taskCreate;
+//_tsk = ["Mines",[friendlySide,civilian],[format ["An Engineer Team has been deployed at your command with High Command Option. Once they reach the position, they will start to deploy %1 mines in the area. Cover them in the meantime.",_cantidad],"Minefield Deploy",_mrk],_posicionTel,"CREATED",5,true,true,"map"] call BIS_fnc_setTask;
 //misiones pushBack _tsk; publicVariable "misiones";
 
-_grupo = createGroup buenos;
+_grupo = createGroup friendlySide;
 
-_unit = _grupo createUnit [(SDKExp select 0), (getMarkerPos respawnBuenos), [], 0, "NONE"];
+_unit = _grupo createUnit [(SDKExp select 0), (getMarkerPos friendlyRespawn), [], 0, "NONE"];
 sleep 1;
-_unit = _grupo createUnit [(SDKExp select 0), (getMarkerPos respawnBuenos), [], 0, "NONE"];
+_unit = _grupo createUnit [(SDKExp select 0), (getMarkerPos friendlyRespawn), [], 0, "NONE"];
 _grupo setGroupId ["MineF"];
 
-_road = [getMarkerPos respawnBuenos] call A3A_fnc_findNearestGoodRoad;
+_road = [getMarkerPos friendlyRespawn] call A3A_fnc_findNearestGoodRoad;
 _pos = position _road findEmptyPosition [1,30,vehSDKTruck];
 
 _camion = vehSDKTruck createVehicle _pos;
@@ -101,7 +101,7 @@ if ((_camion distance _posicionTel < 50) and ({alive _x} count units _grupo > 0)
 		waitUntil {!(isPlayer leader _grupo)};
 		};
 	theBoss hcRemoveGroup _grupo;
-	[petros,"hint","Engineer Team deploying mines."] remoteExec ["A3A_fnc_commsMP",[buenos,civilian]];
+	[petros,"hint","Engineer Team deploying mines."] remoteExec ["A3A_fnc_commsMP",[friendlySide,civilian]];
 	_nul = [leader _grupo, _mrk, "SAFE","SPAWNED", "SHOWMARKER"] execVM "scripts\UPSMON.sqf";
 	sleep 30*_cantidad;
 	if ((alive _camion) and ({alive _x} count units _grupo > 0)) then
@@ -112,7 +112,7 @@ if ((_camion distance _posicionTel < 50) and ({alive _x} count units _grupo > 0)
 		for "_i" from 1 to _cantidad do
 			{
 			_mina = createMine [_tipo,_posicionTel,[],100];
-			buenos revealMine _mina;
+			friendlySide revealMine _mina;
 			};
 		["Mines",[format ["An Engineer Team has been deployed at your command with High Command Option. Once they reach the position, they will start to deploy %1 mines in the area. Cover them in the meantime.",_cantidad],"Minefield Deploy",_mrk],_posicionTel,"SUCCEEDED","Map"] call A3A_fnc_taskUpdate;
 		sleep 15;

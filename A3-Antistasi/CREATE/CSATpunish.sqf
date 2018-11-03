@@ -13,10 +13,10 @@ _vehiculos = [];
 _civiles = [];
 
 _nombredest = [_mrkDestino] call A3A_fnc_localizar;
-[[buenos,civilian,malos],"AtaqueAAF",[format ["%2 is making a punishment expedition to %1. They will kill everybody there. Defend the city at all costs",_nombredest,nameMuyMalos],format ["%1 Punishment",nameMuyMalos],_mrkDestino],getMarkerPos _mrkDestino,false,0,true,"Defend",true] call BIS_fnc_taskCreate;
+[[friendlySide,civilian,enemySide],"AtaqueAAF",[format ["%2 is making a punishment expedition to %1. They will kill everybody there. Defend the city at all costs",_nombredest,nameMuyMalos],format ["%1 Punishment",nameMuyMalos],_mrkDestino],getMarkerPos _mrkDestino,false,0,true,"Defend",true] call BIS_fnc_taskCreate;
 
-_nul = [_mrkOrigen,_mrkDestino,muyMalos] spawn A3A_fnc_artilleria;
-_lado = if (lados getVariable [_mrkDestino,sideUnknown] == malos) then {malos} else {buenos};
+_nul = [_mrkOrigen,_mrkDestino,oppositionSide] spawn A3A_fnc_artilleria;
+_lado = if (lados getVariable [_mrkDestino,sideUnknown] == enemySide) then {enemySide} else {friendlySide};
 _tiempo = time + 3600;
 
 for "_i" from 1 to 3 do
@@ -32,7 +32,7 @@ for "_i" from 1 to 3 do
 		sleep 1;
 		};
 	if (count _pos == 0) then {_pos = _posorigen};
-	_vehicle=[_pos, 0, _tipoveh, muyMalos] call bis_fnc_spawnvehicle;
+	_vehicle=[_pos, 0, _tipoveh, oppositionSide] call bis_fnc_spawnvehicle;
 	_heli = _vehicle select 0;
 	_heliCrew = _vehicle select 1;
 	{[_x] call A3A_fnc_NATOinit} forEach _heliCrew;
@@ -52,8 +52,8 @@ for "_i" from 1 to 3 do
 	else
 		{
 		{_x setBehaviour "CARELESS";} forEach units _grupoheli;
-		_tipoGrupo = [_tipoVeh,muyMalos] call A3A_fnc_cargoSeats;
-		_grupo = [_posOrigen, muyMalos, _tipoGrupo] call A3A_fnc_spawnGroup;
+		_tipoGrupo = [_tipoVeh,oppositionSide] call A3A_fnc_cargoSeats;
+		_grupo = [_posOrigen, oppositionSide, _tipoGrupo] call A3A_fnc_spawnGroup;
 		{_x assignAsCargo _heli;_x moveInCargo _heli; _soldados pushBack _x; [_x] call A3A_fnc_NATOinit; _x setVariable ["origen",_mrkOrigen]} forEach units _grupo;
 		_grupos pushBack _grupo;
 		//[_heli,"CSAT Air Transport"] spawn A3A_fnc_inmuneConvoy;
@@ -103,16 +103,16 @@ _datos = server getVariable _mrkDestino;
 _numCiv = _datos select 0;
 _numCiv = round (_numCiv /10);
 
-if (lados getVariable [_mrkDestino,sideUnknown] == malos) then {[[_posDestino,malos,"",false],"A3A_fnc_patrolCA"] remoteExec ["A3A_fnc_scheduler",2]};
+if (lados getVariable [_mrkDestino,sideUnknown] == enemySide) then {[[_posDestino,enemySide,"",false],"A3A_fnc_patrolCA"] remoteExec ["A3A_fnc_scheduler",2]};
 
 if (_numCiv < 8) then {_numCiv = 8};
 
 _size = [_mrkDestino] call A3A_fnc_sizeMarker;
-//_grupoCivil = if (_lado == buenos) then {createGroup buenos} else {createGroup malos};
-_grupoCivil = createGroup buenos;
+//_grupoCivil = if (_lado == friendlySide) then {createGroup friendlySide} else {createGroup enemySide};
+_grupoCivil = createGroup friendlySide;
 _grupos pushBack _grupoCivil;
-//[muyMalos,[civilian,0]] remoteExec ["setFriend",2];
-_tipoUnit = if (_lado == buenos) then {SDKUnarmed} else {NATOUnarmed};
+//[oppositionSide,[civilian,0]] remoteExec ["setFriend",2];
+_tipoUnit = if (_lado == friendlySide) then {SDKUnarmed} else {NATOUnarmed};
 for "_i" from 0 to _numCiv do
 	{
 	while {true} do
@@ -142,7 +142,7 @@ for "_i" from 0 to round random 2 do
 	{
 	if ([vehCSATPlane] call A3A_fnc_vehAvailable) then
 		{
-		_nul = [_mrkdestino,muyMalos,"NAPALM"] spawn A3A_fnc_airstrike;
+		_nul = [_mrkdestino,oppositionSide,"NAPALM"] spawn A3A_fnc_airstrike;
 		sleep 30;
 		};
 	};
@@ -154,17 +154,17 @@ if ((({not (captive _x)} count _soldados) < ({captive _x} count _soldados)) or (
 	{_x doMove [0,0,0]} forEach _soldados;
 	//["AtaqueAAF", "SUCCEEDED",true] spawn BIS_fnc_taskSetState;
 	["AtaqueAAF",[format ["%2 is making a punishment expedition to %1. They will kill everybody there. Defend the city at all costs",_nombredest,nameMuyMalos],format ["%1 Punishment",nameMuyMalos],_mrkDestino],getMarkerPos _mrkDestino,"SUCCEEDED"] call A3A_fnc_taskUpdate;
-	if ({(side _x == buenos) and (_x distance _posDestino < _size * 2)} count allUnits >= {(side _x == malos) and (_x distance _posDestino < _size * 2)} count allUnits) then
+	if ({(side _x == friendlySide) and (_x distance _posDestino < _size * 2)} count allUnits >= {(side _x == enemySide) and (_x distance _posDestino < _size * 2)} count allUnits) then
 		{
-		if (lados getVariable [_mrkDestino,sideUnknown] == malos) then {[-15,15,_posdestino] remoteExec ["A3A_fnc_citySupportChange",2]} else {[-5,15,_posdestino] remoteExec ["A3A_fnc_citySupportChange",2]};
+		if (lados getVariable [_mrkDestino,sideUnknown] == enemySide) then {[-15,15,_posdestino] remoteExec ["A3A_fnc_citySupportChange",2]} else {[-5,15,_posdestino] remoteExec ["A3A_fnc_citySupportChange",2]};
 		[-5,0] remoteExec ["A3A_fnc_prestige",2];
 		{[-10,10,_x] remoteExec ["A3A_fnc_citySupportChange",2]} forEach ciudades;
-		{if (isPlayer _x) then {[10,_x] call A3A_fnc_playerScoreAdd}} forEach ([500,0,_posdestino,buenos] call A3A_fnc_distanceUnits);
+		{if (isPlayer _x) then {[10,_x] call A3A_fnc_playerScoreAdd}} forEach ([500,0,_posdestino,friendlySide] call A3A_fnc_distanceUnits);
 		[10,theBoss] call A3A_fnc_playerScoreAdd;
 		}
 	else
 		{
-		if (lados getVariable [_mrkDestino,sideUnknown] == malos) then {[15,-5,_posdestino] remoteExec ["A3A_fnc_citySupportChange",2]} else {[15,-15,_posdestino] remoteExec ["A3A_fnc_citySupportChange",2]};
+		if (lados getVariable [_mrkDestino,sideUnknown] == enemySide) then {[15,-5,_posdestino] remoteExec ["A3A_fnc_citySupportChange",2]} else {[15,-15,_posdestino] remoteExec ["A3A_fnc_citySupportChange",2]};
 		{[10,-10,_x] remoteExec ["A3A_fnc_citySupportChange",2]} forEach ciudades;
 		};
 	}
@@ -179,26 +179,26 @@ else
 	for "_i" from 1 to 60 do
 		{
 		_mina = createMine ["APERSMine",_posdestino,[],_size];
-		muyMalos revealMine _mina;
+		oppositionSide revealMine _mina;
 		};
 	[_mrkDestino] call A3A_fnc_destroyCity;
 	};
 
 sleep 15;
-//[muyMalos,[civilian,1]] remoteExec ["setFriend",2];
+//[oppositionSide,[civilian,1]] remoteExec ["setFriend",2];
 _nul = [0,"AtaqueAAF"] spawn A3A_fnc_borrarTask;
 [7200] remoteExec ["A3A_fnc_timingCA",2];
 {
 _veh = _x;
-if (!([distanciaSPWN,1,_veh,buenos] call A3A_fnc_distanceUnits) and (({_x distance _veh <= distanciaSPWN} count (allPlayers - (entities "HeadlessClient_F"))) == 0)) then {deleteVehicle _x};
+if (!([spawnDistanceDefault,1,_veh,friendlySide] call A3A_fnc_distanceUnits) and (({_x distance _veh <= spawnDistanceDefault} count (allPlayers - (entities "HeadlessClient_F"))) == 0)) then {deleteVehicle _x};
 } forEach _vehiculos;
 {
 _veh = _x;
-if (!([distanciaSPWN,1,_veh,buenos] call A3A_fnc_distanceUnits) and (({_x distance _veh <= distanciaSPWN} count (allPlayers - (entities "HeadlessClient_F"))) == 0)) then {deleteVehicle _x; _soldados = _soldados - [_x]};
+if (!([spawnDistanceDefault,1,_veh,friendlySide] call A3A_fnc_distanceUnits) and (({_x distance _veh <= spawnDistanceDefault} count (allPlayers - (entities "HeadlessClient_F"))) == 0)) then {deleteVehicle _x; _soldados = _soldados - [_x]};
 } forEach _soldados;
 {
 _veh = _x;
-if (!([distanciaSPWN,1,_veh,buenos] call A3A_fnc_distanceUnits) and (({_x distance _veh <= distanciaSPWN} count (allPlayers - (entities "HeadlessClient_F"))) == 0)) then {deleteVehicle _x; _pilotos = _pilotos - [_x]};
+if (!([spawnDistanceDefault,1,_veh,friendlySide] call A3A_fnc_distanceUnits) and (({_x distance _veh <= spawnDistanceDefault} count (allPlayers - (entities "HeadlessClient_F"))) == 0)) then {deleteVehicle _x; _pilotos = _pilotos - [_x]};
 } forEach _pilotos;
 
 bigAttackInProgress = false;
@@ -208,7 +208,7 @@ if (count _soldados > 0) then
 	{
 	{
 	_veh = _x;
-	waitUntil {sleep 1; !([distanciaSPWN,1,_veh,buenos] call A3A_fnc_distanceUnits) and (({_x distance _veh <= distanciaSPWN} count (allPlayers - (entities "HeadlessClient_F"))) == 0)};
+	waitUntil {sleep 1; !([spawnDistanceDefault,1,_veh,friendlySide] call A3A_fnc_distanceUnits) and (({_x distance _veh <= spawnDistanceDefault} count (allPlayers - (entities "HeadlessClient_F"))) == 0)};
 	deleteVehicle _veh;
 	} forEach _soldados;
 	};
@@ -217,7 +217,7 @@ if (count _pilotos > 0) then
 	{
 	{
 	_veh = _x;
-	waitUntil {sleep 1; !([distanciaSPWN,1,_x,buenos] call A3A_fnc_distanceUnits) and (({_x distance _veh <= distanciaSPWN} count (allPlayers - (entities "HeadlessClient_F"))) == 0)};
+	waitUntil {sleep 1; !([spawnDistanceDefault,1,_x,friendlySide] call A3A_fnc_distanceUnits) and (({_x distance _veh <= spawnDistanceDefault} count (allPlayers - (entities "HeadlessClient_F"))) == 0)};
 	deleteVehicle _veh;
 	} forEach _pilotos;
 	};

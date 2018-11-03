@@ -96,7 +96,7 @@ if ((_tipo == "SB") or (_tipo == "CB")) then
 		}
 	else
 		{
-		_sitios = marcadores select {lados getVariable [_x,sideUnknown] == buenos};
+		_sitios = marcadores select {lados getVariable [_x,sideUnknown] == friendlySide};
 		cercano = [_sitios,_posicion] call BIS_fnc_nearestPosition;
 		if (!(_posicion inArea cercano)) then
 			{
@@ -334,7 +334,7 @@ if (_tipo == "RB") then
 
 while {alive _veh} do
 	{
-	if ((not([distanciaSPWN,1,_veh,buenos] call A3A_fnc_distanceUnits)) and (_veh distance getMarkerPos respawnBuenos > 100)) then
+	if ((not([spawnDistanceDefault,1,_veh,friendlySide] call A3A_fnc_distanceUnits)) and (_veh distance getMarkerPos friendlyRespawn > 100)) then
 		{
 		deleteVehicle _veh
 		};

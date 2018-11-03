@@ -9,15 +9,15 @@ _posDestino = getMarkerPos _mrkDestino;
 _posOrigen = getMarkerPos _mrkOrigen;
 
 _land = if (_posOrigen distance _posDestino > distanceForLandAttack) then {false} else {true};
-_tipoGrupo = if (_lado == malos) then {if (_numero == 4) then {selectRandom gruposNATOmid} else {selectRandom gruposNATOSquad}} else {if (_numero == 4) then {selectRandom gruposCSATmid} else {selectRandom gruposCSATSquad}};
+_tipoGrupo = if (_lado == enemySide) then {if (_numero == 4) then {selectRandom gruposNATOmid} else {selectRandom gruposNATOSquad}} else {if (_numero == 4) then {selectRandom gruposCSATmid} else {selectRandom gruposCSATSquad}};
 _tipoVeh = "";
 if (_land) then
 	{
-	if (_lado == malos) then {_tipoVeh = selectRandom vehNATOTrucks} else {_tipoVeh = selectRandom vehCSATTrucks};
+	if (_lado == enemySide) then {_tipoVeh = selectRandom vehNATOTrucks} else {_tipoVeh = selectRandom vehCSATTrucks};
 	}
 else
 	{
-	_vehPool = if (_lado == malos) then {vehNATOTransportHelis} else {vehCSATTransportHelis};
+	_vehPool = if (_lado == enemySide) then {vehNATOTransportHelis} else {vehCSATTransportHelis};
 	if ((_numero > 4) and (count _vehPool > 1) and !isFIA) then {_vehPool = _vehPool - [vehNATOPatrolHeli,vehCSATPatrolHeli]};
 	//_vehPool = _vehPool select {(_x isKindOf "Helicopter") and (_x in vehFastRope)};
 	_tipoVeh = selectRandom _vehPool;
@@ -154,7 +154,7 @@ _x addEventHandler ["Killed",
 		reinfPatrols = reinfPatrols - 1; publicVariable "reinfPatrols";
 		_origen = _grupo getVariable "origen";
 		_destino = _grupo getVariable "reinfMarker";
-		if (((lados getVariable [_origen,sideUnknown] == malos) and (lados getVariable [_destino,sideUnknown] == malos)) or ((lados getVariable [_origen,sideUnknown] == muyMalos) and (lados getVariable [_destino,sideUnknown] == muyMalos))) then
+		if (((lados getVariable [_origen,sideUnknown] == enemySide) and (lados getVariable [_destino,sideUnknown] == enemySide)) or ((lados getVariable [_origen,sideUnknown] == oppositionSide) and (lados getVariable [_destino,sideUnknown] == oppositionSide))) then
 			{
 			_killzones = killZones getVariable [_origen,[]];
 			_killzones pushBack _destino;

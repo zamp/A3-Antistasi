@@ -13,11 +13,11 @@ _pos = [];
 _size = [_marcador] call A3A_fnc_sizeMarker;
 
 _frontera = [_marcador] call A3A_fnc_isFrontline;
-_lado = muyMalos;
+_lado = oppositionSide;
 _esFIA = false;
-if (lados getVariable [_marcador,sideUnknown] == malos) then
+if (lados getVariable [_marcador,sideUnknown] == enemySide) then
 	{
-	_lado = malos;
+	_lado = enemySide;
 	if ((random 10 >= (tierWar + difficultyCoef)) and !(_frontera) and !(_marcador in forcedSpawn)) then
 		{
 		_esFIA = true;
@@ -26,7 +26,7 @@ if (lados getVariable [_marcador,sideUnknown] == malos) then
 
 _antena = objNull;
 
-if (_lado == malos) then
+if (_lado == enemySide) then
 	{
 	if (_marcador in puestos) then
 		{
@@ -40,7 +40,7 @@ if (_lado == malos) then
 
 _mrk = createMarkerLocal [format ["%1patrolarea", random 100], _posicion];
 _mrk setMarkerShapeLocal "RECTANGLE";
-_mrk setMarkerSizeLocal [(distanciaSPWN/2),(distanciaSPWN/2)];
+_mrk setMarkerSizeLocal [(spawnDistanceDefault/2),(spawnDistanceDefault/2)];
 _mrk setMarkerTypeLocal "hd_warning";
 _mrk setMarkerColorLocal "ColorRed";
 _mrk setMarkerBrushLocal "DiagGrid";
@@ -64,7 +64,7 @@ if (_patrol) then
 	_cuenta = 0;
 	while {(spawner getVariable _marcador !=2) and (_cuenta < 4)} do
 		{
-		_arrayGrupos = if (_lado == malos) then
+		_arrayGrupos = if (_lado == enemySide) then
 			{
 			if (!_esFIA) then {gruposNATOsmall} else {gruposFIASmall};
 			}
@@ -96,8 +96,8 @@ if (_patrol) then
 if ((_frontera) and (spawner getVariable _marcador!=2) and (_marcador in puestos)) then
 	{
 	_grupo = createGroup _lado;
-	_tipoUnit = if (_lado==malos) then {staticCrewmalos} else {staticCrewMuyMalos};
-	_tipoVeh = if (_lado == malos) then {NATOMortar} else {CSATMortar};
+	_tipoUnit = if (_lado==enemySide) then {staticCrewmalos} else {staticCrewMuyMalos};
+	_tipoVeh = if (_lado == enemySide) then {NATOMortar} else {CSATMortar};
 	_pos = [_posicion] call A3A_fnc_mortarPos;
 	_veh = _tipoVeh createVehicle _pos;
 	_nul=[_veh] execVM "scripts\UPSMON\MON_artillery_add.sqf";
@@ -114,14 +114,14 @@ _grupos pushBack (_ret select 0);
 _vehiculos append (_ret select 1);
 _soldados append (_ret select 2);
 
-_tipoVeh = if (_lado == malos) then {NATOFlag} else {CSATFlag};
+_tipoVeh = if (_lado == enemySide) then {NATOFlag} else {CSATFlag};
 _bandera = createVehicle [_tipoVeh, _posicion, [],0, "CAN_COLLIDE"];
 _bandera allowDamage false;
-[_bandera,"take"] remoteExec ["A3A_fnc_flagaction",[buenos,civilian],_bandera];
+[_bandera,"take"] remoteExec ["A3A_fnc_flagaction",[friendlySide,civilian],_bandera];
 _vehiculos pushBack _bandera;
 
 _caja = objNull;
-if (_lado == malos) then
+if (_lado == enemySide) then
 	{
 	_caja = NATOAmmoBox createVehicle _posicion;
 	_nul = [_caja] call A3A_fnc_NATOcrate;
@@ -138,7 +138,7 @@ _roads = _posicion nearRoads _size;
 
 if ((_marcador in puertos) and (spawner getVariable _marcador!=2) and !isFIA) then
 	{
-	_tipoVeh = if (_lado == malos) then {vehNATOBoat} else {vehCSATBoat};
+	_tipoVeh = if (_lado == enemySide) then {vehNATOBoat} else {vehCSATBoat};
 	if ([_tipoVeh] call A3A_fnc_vehAvailable) then
 		{
 		_mrkMar = seaSpawn select {getMarkerPos _x inArea _marcador};
@@ -180,12 +180,12 @@ else
 					_vehiculos pushBack _bunker;
 					_bunker setDir _dirveh;
 					_pos = getPosATL _bunker;
-					_tipoVeh = if (_lado==malos) then {staticATmalos} else {staticATmuyMalos};
+					_tipoVeh = if (_lado==enemySide) then {staticATmalos} else {staticATmuyMalos};
 					_veh = _tipoVeh createVehicle _posicion;
 					_vehiculos pushBack _veh;
 					_veh setPos _pos;
 					_veh setDir _dirVeh + 180;
-					_tipoUnit = if (_lado==malos) then {staticCrewmalos} else {staticCrewMuyMalos};
+					_tipoUnit = if (_lado==enemySide) then {staticCrewmalos} else {staticCrewMuyMalos};
 					_unit = _grupo createUnit [_tipoUnit, _posicion, [], 0, "NONE"];
 					[_unit,_marcador] call A3A_fnc_NATOinit;
 					[_veh] call A3A_fnc_AIVEHinit;
@@ -218,7 +218,7 @@ if (count _roads != 0) then
 	_pos = _posicion findEmptyPosition [5,_size,"I_Truck_02_covered_F"];//donde pone 5 antes ponía 10
 	if (count _pos > 0) then
 		{
-		_tipoVeh = if (_lado == malos) then {if (!_esFIA) then {vehNATOTrucks} else {[vehFIATruck]}} else {vehCSATTrucks};
+		_tipoVeh = if (_lado == enemySide) then {if (!_esFIA) then {vehNATOTrucks} else {[vehFIATruck]}} else {vehCSATTrucks};
 		_veh = createVehicle [selectRandom _tipoVeh, _pos, [], 0, "NONE"];
 		_veh setDir random 360;
 		_vehiculos pushBack _veh;
@@ -243,7 +243,7 @@ if ((!isNull _antena) and (spawner getVariable _marcador!=2)) then
 			_posF = _pos getPos [1,_dir];
 			_posF set [2,24.3];
 			};
-		_tipoUnit = if (_lado == malos) then {if (!_esFIA) then {NATOMarksman} else {FIAMarksman}} else {CSATMarksman};
+		_tipoUnit = if (_lado == enemySide) then {if (!_esFIA) then {NATOMarksman} else {FIAMarksman}} else {CSATMarksman};
 		_unit = _grupo createUnit [_tipoUnit, _posicion, [], _dir, "NONE"];
 		_unit setPosATL _posF;
 		_unit forceSpeed 0;
@@ -295,6 +295,6 @@ if (alive _x) then
 {
 if (!(_x in staticsToSave)) then
 	{
-	if ((!([distanciaSPWN-_size,1,_x,buenos] call A3A_fnc_distanceUnits))) then {deleteVehicle _x}
+	if ((!([spawnDistanceDefault-_size,1,_x,friendlySide] call A3A_fnc_distanceUnits))) then {deleteVehicle _x}
 	};
 } forEach _vehiculos;

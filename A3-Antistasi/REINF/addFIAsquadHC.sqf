@@ -1,11 +1,11 @@
 
 if (player != theBoss) exitWith {hint "Only our Commander has access to this function"};
 //if (!allowPlayerRecruit) exitWith {hint "Server is very loaded. \nWait one minute or change FPS settings in order to fulfill this request"};
-if (markerAlpha respawnBuenos == 0) exitWith {hint "You cant recruit a new squad while you are moving your HQ"};
+if (markerAlpha friendlyRespawn == 0) exitWith {hint "You cant recruit a new squad while you are moving your HQ"};
 if (!([player] call A3A_fnc_hasRadio)) exitWith {if !(isFIA) then {hint "You need a radio in your inventory to be able to give orders to other squads"} else {hint "You need a Radio Man in your group to be able to give orders to other squads"}};
 _chequeo = false;
 {
-	if (((side _x == muyMalos) or (side _x == malos)) and (_x distance petros < 500) and ([_x] call A3A_fnc_canFight) and !(isPlayer _x)) exitWith {_chequeo = true};
+	if (((side _x == oppositionSide) or (side _x == enemySide)) and (_x distance petros < 500) and ([_x] call A3A_fnc_canFight) and !(isPlayer _x)) exitWith {_chequeo = true};
 } forEach allUnits;
 
 if (_chequeo) exitWith {Hint "You cannot Recruit Squads with enemies near your HQ"};
@@ -82,16 +82,16 @@ if (_exit) exitWith {garageVeh = nil};
 
 _nul = [- _costeHR, - _coste] remoteExec ["A3A_fnc_resourcesFIA",2];
 
-_pos = getMarkerPos respawnBuenos;
+_pos = getMarkerPos friendlyRespawn;
 
 _road = [_pos] call A3A_fnc_findNearestGoodRoad;
 _bypassAI = false;
 if (_esinf) then
 	{
-	_pos = [(getMarkerPos respawnBuenos), 30, random 360] call BIS_Fnc_relPos;
+	_pos = [(getMarkerPos friendlyRespawn), 30, random 360] call BIS_Fnc_relPos;
 	if (_tipoGrupo isEqualType []) then
 		{
-		_grupo = [_pos, buenos, _formato,true] call A3A_fnc_spawnGroup;
+		_grupo = [_pos, friendlySide, _formato,true] call A3A_fnc_spawnGroup;
 		//if (_tipogrupo isEqualTo gruposSDKSquad) then {_format = "Squd-"};
 		if (_tipogrupo isEqualTo gruposSDKmid) then {_format = "Tm-"};
 		if (_tipogrupo isEqualTo gruposSDKAT) then {_format = "AT-"};
@@ -115,14 +115,14 @@ if (_esinf) then
 		}
 	else
 		{
-		_grupo = [_pos, buenos, _formato,true] call A3A_fnc_spawnGroup;
+		_grupo = [_pos, friendlySide, _formato,true] call A3A_fnc_spawnGroup;
 		_grupo setVariable ["staticAutoT",false,true];
 		if (_tipogrupo == SDKMortar) then {_format = "Mort-"};
 		if (_tipoGrupo == SDKMGStatic) then {_format = "MG-"};
 		[_grupo,_tipoGrupo] spawn A3A_fnc_MortyAI;
 		_bypassAI = true;
 		};
-	_format = format ["%1%2",_format,{side (leader _x) == buenos} count allGroups];
+	_format = format ["%1%2",_format,{side (leader _x) == friendlySide} count allGroups];
 	_grupo setGroupId [_format];
 	}
 else
@@ -130,11 +130,11 @@ else
 	_pos = position _road findEmptyPosition [1,30,vehSDKTruck];
 	_vehicle = if (_tipoGrupo == staticAABuenos) then
 		{
-		if (activeGREF) then {[_pos, 0,"rhsgref_ins_g_ural_Zu23", buenos] call bis_fnc_spawnvehicle} else {[_pos, 0,vehSDKTruck, buenos] call bis_fnc_spawnvehicle};
+		if (activeGREF) then {[_pos, 0,"rhsgref_ins_g_ural_Zu23", friendlySide] call bis_fnc_spawnvehicle} else {[_pos, 0,vehSDKTruck, friendlySide] call bis_fnc_spawnvehicle};
 		}
 	else
 		{
-		[_pos, 0,_tipoGrupo, buenos] call bis_fnc_spawnvehicle
+		[_pos, 0,_tipoGrupo, friendlySide] call bis_fnc_spawnvehicle
 		};
 	_camion = _vehicle select 0;
 	_grupo = _vehicle select 2;
@@ -151,8 +151,8 @@ else
 		_mortero setDir (getDir _camion + 180);
 		_morty moveInGunner _mortero;
 		};
-	if (_tipogrupo == vehSDKAT) then {_grupo setGroupId [format ["M.AT-%1",{side (leader _x) == buenos} count allGroups]]};
-	if (_tipogrupo == staticAABuenos) then {_grupo setGroupId [format ["M.AA-%1",{side (leader _x) == buenos} count allGroups]]};
+	if (_tipogrupo == vehSDKAT) then {_grupo setGroupId [format ["M.AT-%1",{side (leader _x) == friendlySide} count allGroups]]};
+	if (_tipogrupo == staticAABuenos) then {_grupo setGroupId [format ["M.AA-%1",{side (leader _x) == friendlySide} count allGroups]]};
 
 	driver _camion action ["engineOn", vehicle driver _camion];
 	_nul = [_camion] call A3A_fnc_AIVEHinit;

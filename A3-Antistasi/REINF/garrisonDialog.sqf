@@ -21,7 +21,7 @@ _posicion = getMarkerPos _cercano;
 
 if (getMarkerPos _cercano distance _posicionTel > 40) exitWith {hint "You must click near a marked zone"; _nul=CreateDialog "build_menu";};
 
-if (not(lados getVariable [_cercano,sideUnknown] == buenos)) exitWith {hint format ["That zone does not belong to %1",nameBuenos]; _nul=CreateDialog "build_menu";};
+if (not(lados getVariable [_cercano,sideUnknown] == friendlySide)) exitWith {hint format ["That zone does not belong to %1",nameBuenos]; _nul=CreateDialog "build_menu";};
 if ([_posicion,500] call A3A_fnc_enemyNearCheck) exitWith {hint "You cannot manage this garrison while there are enemies nearby";_nul=CreateDialog "build_menu"};
 //if (((_cercano in puestosFIA) and !(isOnRoad _posicion)) /*or (_cercano in ciudades)*/ or (_cercano in controles)) exitWith {hint "You cannot manage garrisons on this kind of zone"; _nul=CreateDialog "garrison_menu"};
 _puestoFIA = if (_cercano in puestosFIA) then {true} else {false};

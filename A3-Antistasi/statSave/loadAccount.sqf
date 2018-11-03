@@ -10,11 +10,11 @@ else
 	{
 	if (!isDedicated) then
 		{
-		if (side player == buenos) then
+		if (side player == friendlySide) then
 			{
 			waitUntil {/*(!isNil "serverInitDone") and */(!isNil "initVar")};
 			["loadoutPlayer"] call fn_LoadStat;
-			//player setPos getMarkerPos respawnBuenos;
+			//player setPos getMarkerPos friendlyRespawn;
 			if ([player] call A3A_fnc_isMember) then
 				{
 				["scorePlayer"] call fn_LoadStat;
@@ -52,7 +52,7 @@ if (isServer and !_byPassServer) then
 	["resourcesFIA"] call fn_LoadStat;
 	["garrison"] call fn_LoadStat;
 	["skillFIA"] call fn_LoadStat;
-	["distanciaSPWN"] call fn_LoadStat;
+	["spawnDistanceDefault"] call fn_LoadStat;
 	["civPerc"] call fn_LoadStat;
 	["maxUnits"] call fn_LoadStat;
 	["miembros"] call fn_LoadStat;
@@ -141,7 +141,7 @@ if (isServer and !_byPassServer) then
 	if (!haveRadio) then {if ("ItemRadio" in unlockedItems) then {haveRadio = true; publicVariable "haveRadio"}};
 
 	{
-	if (lados getVariable [_x,sideUnknown] != buenos) then
+	if (lados getVariable [_x,sideUnknown] != friendlySide) then
 		{
 		_posicion = getMarkerPos _x;
 		_cercano = [(marcadores - controles - puestosFIA),_posicion] call BIS_fnc_nearestPosition;
@@ -154,7 +154,7 @@ if (isServer and !_byPassServer) then
 	{
 	if (lados getVariable [_x,sideUnknown] == sideUnknown) then
 		{
-		lados setVariable [_x,malos,true];
+		lados setVariable [_x,enemySide,true];
 		};
 	} forEach marcadores;
 
@@ -176,8 +176,8 @@ if (isServer and !_byPassServer) then
 	["estaticas"] call fn_LoadStat;//tiene que ser el último para que el sleep del borrado del contenido no haga que despawneen
 
 
-	if (!isMultiPlayer) then {player setPos getMarkerPos respawnBuenos} else {{_x setPos getMarkerPos respawnBuenos} forEach (playableUnits select {side _x == buenos})};
-	_sitios = marcadores select {lados getVariable [_x,sideUnknown] == buenos};
+	if (!isMultiPlayer) then {player setPos getMarkerPos friendlyRespawn} else {{_x setPos getMarkerPos friendlyRespawn} forEach (playableUnits select {side _x == friendlySide})};
+	_sitios = marcadores select {lados getVariable [_x,sideUnknown] == friendlySide};
 	tierWar = 1 + (floor (((5*({(_x in puestos) or (_x in recursos) or (_x in ciudades)} count _sitios)) + (10*({_x in puertos} count _sitios)) + (20*({_x in aeropuertos} count _sitios)))/10));
 	if (tierWar > 10) then {tierWar = 10};
 	publicVariable "tierWar";
@@ -187,7 +187,7 @@ if (isServer and !_byPassServer) then
 	clearItemCargoGlobal caja;
 	clearBackpackCargoGlobal caja;
 
-	[] remoteExec ["A3A_fnc_statistics",[buenos,civilian]];
+	[] remoteExec ["A3A_fnc_statistics",[friendlySide,civilian]];
 	diag_log "Antistasi: Server sided Persistent Load done";
 
 	["tasks"] call fn_LoadStat;
@@ -198,7 +198,7 @@ if (isServer and !_byPassServer) then
 		_dmrk = createMarker [format ["Dum%1",_x], _pos];
 		_dmrk setMarkerShape "ICON";
 		[_x] call A3A_fnc_mrkUpdate;
-		if (lados getVariable [_x,sideUnknown] != buenos) then
+		if (lados getVariable [_x,sideUnknown] != friendlySide) then
 			{
 			_nul = [_x] call A3A_fnc_crearControles;
 			};
@@ -211,7 +211,7 @@ if (isServer and !_byPassServer) then
 		_dmrk setMarkerType "loc_rock";
 		_dmrk setMarkerText "Resources";
 		[_x] call A3A_fnc_mrkUpdate;
-		if (lados getVariable [_x,sideUnknown] != buenos) then
+		if (lados getVariable [_x,sideUnknown] != friendlySide) then
 			{
 			_nul = [_x] call A3A_fnc_crearControles;
 			};
@@ -224,7 +224,7 @@ if (isServer and !_byPassServer) then
 		_dmrk setMarkerType "u_installation";
 		_dmrk setMarkerText "Factory";
 		[_x] call A3A_fnc_mrkUpdate;
-		if (lados getVariable [_x,sideUnknown] != buenos) then
+		if (lados getVariable [_x,sideUnknown] != friendlySide) then
 			{
 			_nul = [_x] call A3A_fnc_crearControles;
 			};
@@ -236,7 +236,7 @@ if (isServer and !_byPassServer) then
 		_dmrk setMarkerShape "ICON";
 		_dmrk setMarkerType "loc_bunker";
 		[_x] call A3A_fnc_mrkUpdate;
-		if (lados getVariable [_x,sideUnknown] != buenos) then
+		if (lados getVariable [_x,sideUnknown] != friendlySide) then
 			{
 			_nul = [_x] call A3A_fnc_crearControles;
 			};
@@ -249,13 +249,13 @@ if (isServer and !_byPassServer) then
 		_dmrk setMarkerType "b_naval";
 		_dmrk setMarkerText "Sea Port";
 		[_x] call A3A_fnc_mrkUpdate;
-		if (lados getVariable [_x,sideUnknown] != buenos) then
+		if (lados getVariable [_x,sideUnknown] != friendlySide) then
 			{
 			_nul = [_x] call A3A_fnc_crearControles;
 			};
 		} forEach puertos;
-		lados setVariable ["NATO_carrier",malos,true];
-		lados setVariable ["CSAT_carrier",muyMalos,true];
+		lados setVariable ["NATO_carrier",enemySide,true];
+		lados setVariable ["CSAT_carrier",oppositionSide,true];
 		};
 	statsLoaded = 0; publicVariable "statsLoaded";
 	placementDone = true; publicVariable "placementDone";

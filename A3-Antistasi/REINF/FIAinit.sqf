@@ -38,7 +38,7 @@ else
 	if (_unit skill "aimingAccuracy" > 0.35) then {_unit setSkill ["aimingAccuracy",0.35]};
 	if (random 40 < skillFIA) then
 		{
-		if (getNumber (configfile >> "CfgWeapons" >> headgear _unit >> "ItemInfo" >> "HitpointsProtectionInfo" >> "Head" >> "armor") < 2) then {removeHeadgear _unit;_unit addHeadgear (selectRandom cascos)};
+		if (getNumber (configfile >> "CfgWeapons" >> headgear _unit >> "ItemInfo" >> "HitpointsProtectionInfo" >> "Head" >> "armor") < 2) then {removeHeadgear _unit;_unit addHeadgear (selectRandom helmets)};
 		};
 	if ((_tipo in SDKMil) or (_tipo == staticCrewBuenos)) then
 		{
@@ -217,14 +217,14 @@ if (player == leader _unit) then
 		[_muerto] spawn A3A_fnc_postmortem;
 		_killer = _this select 1;
 		if !(isFIA) then {arrayids pushBackUnique (name _muerto)};
-		if (side _killer == malos) then
+		if (side _killer == enemySide) then
 			{
 			_nul = [0.25,0,getPos _muerto] remoteExec ["A3A_fnc_citySupportChange",2];
 			[-0.25,0] remoteExec ["A3A_fnc_prestige",2];
 			}
 		else
 			{
-			if (side _killer == muyMalos) then
+			if (side _killer == oppositionSide) then
 				{
 				[0,-0.25] remoteExec ["A3A_fnc_prestige",2]
 				}
@@ -255,7 +255,7 @@ if (player == leader _unit) then
 			if (("ItemRadio" in assignedItems _unit) and ([player] call A3A_fnc_hasRadio)) exitWith {_unit groupChat format ["This is %1, radiocheck OK",name _unit]};
 			if (unitReady _unit) then
 				{
-				if ((alive _unit) and (_unit distance (getMarkerPos respawnBuenos) > 50) and (_unit distance leader group _unit > 500) and ((vehicle _unit == _unit) or ((typeOf (vehicle _unit)) in arrayCivVeh))) then
+				if ((alive _unit) and (_unit distance (getMarkerPos friendlyRespawn) > 50) and (_unit distance leader group _unit > 500) and ((vehicle _unit == _unit) or ((typeOf (vehicle _unit)) in arrayCivVeh))) then
 					{
 					hint format ["%1 lost communication, he will come back with you if possible", name _unit];
 					[_unit] join rezagados;
@@ -263,7 +263,7 @@ if (player == leader _unit) then
 					_unit doMove position player;
 					_tiempo = time + 900;
 					waitUntil {sleep 1;(!alive _unit) or (_unit distance player < 500) or (time > _tiempo)};
-					if ((_unit distance player >= 500) and (alive _unit)) then {_unit setPos (getMarkerPos respawnBuenos)};
+					if ((_unit distance player >= 500) and (alive _unit)) then {_unit setPos (getMarkerPos friendlyRespawn)};
 					[_unit] join group player;
 					};
 				};
@@ -276,7 +276,7 @@ else
 		_muerto = _this select 0;
 		_killer = _this select 1;
 		[_muerto] remoteExec ["A3A_fnc_postmortem",2];
-		if ((isPlayer _killer) and (side _killer == buenos)) then
+		if ((isPlayer _killer) and (side _killer == friendlySide)) then
 			{
 			if (!isMultiPlayer) then
 				{
@@ -286,14 +286,14 @@ else
 			}
 		else
 			{
-			if (side _killer == malos) then
+			if (side _killer == enemySide) then
 				{
 				_nul = [0.25,0,getPos _muerto] remoteExec ["A3A_fnc_citySupportChange",2];
 				[-0.25,0] remoteExec ["A3A_fnc_prestige",2];
 				}
 			else
 				{
-				if (side _killer == muyMalos) then
+				if (side _killer == oppositionSide) then
 					{
 					[0,-0.25] remoteExec ["A3A_fnc_prestige",2]
 					}

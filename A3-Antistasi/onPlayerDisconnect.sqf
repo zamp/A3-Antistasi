@@ -10,7 +10,7 @@ if (_unit == theBoss) then
 	{
 	if (!(_x getVariable ["esNATO",false])) then
 		{
-		if ((leader _x getVariable ["spawner",false]) and ({isPlayer _x} count (units _x) == 0) and (side group _x == buenos)) then
+		if ((leader _x getVariable ["spawner",false]) and ({isPlayer _x} count (units _x) == 0) and (side group _x == friendlySide)) then
 			{
 			_uds = units _x;
 				{
@@ -58,7 +58,7 @@ if (_unit == theBoss) then
 	if (group petros == group _unit) then {[] spawn A3A_fnc_buildHQ};
 	};
 //{if (groupOwner _x ==)} forEach allGroups select {(side _x == civilian) and (!isPlayer leader _x)};
-if (side group _unit == buenos) then
+if (side group _unit == friendlySide) then
 	{
 	if ((_hr > 0) or (_recursos > 0)) then {[_hr,_recursos] spawn A3A_fnc_resourcesFIA};
 	if (membershipEnabled and pvpEnabled) then

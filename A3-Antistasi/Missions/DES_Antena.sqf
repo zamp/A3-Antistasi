@@ -21,9 +21,9 @@ _fechalimnum = dateToNumber _fechalim;
 _mrkfin = createMarker [format ["DES%1", random 100], _posicion];
 _mrkfin setMarkerShape "ICON";
 
-[[buenos,civilian],"DES",[format ["We need to destroy or take a Radio Tower in %1. This will interrupt %4 Propaganda Nework. Do it before %2:%3.",_nombredest,numberToDate [2035,_fechalimnum] select 3,numberToDate [2035,_fechalimnum] select 4,nameMalos],"Destroy Radio Tower",_mrkfin],_posicion,false,0,true,"Destroy",true] call BIS_fnc_taskCreate;
+[[friendlySide,civilian],"DES",[format ["We need to destroy or take a Radio Tower in %1. This will interrupt %4 Propaganda Nework. Do it before %2:%3.",_nombredest,numberToDate [2035,_fechalimnum] select 3,numberToDate [2035,_fechalimnum] select 4,nameMalos],"Destroy Radio Tower",_mrkfin],_posicion,false,0,true,"Destroy",true] call BIS_fnc_taskCreate;
 misiones pushBack ["DES","CREATED"]; publicVariable "misiones";
-waitUntil {sleep 1;(dateToNumber date > _fechalimnum) or (not alive _antena) or (not(lados getVariable [_marcador,sideUnknown] == malos))};
+waitUntil {sleep 1;(dateToNumber date > _fechalimnum) or (not alive _antena) or (not(lados getVariable [_marcador,sideUnknown] == enemySide))};
 
 _bonus = if (_dificil) then {2} else {1};
 

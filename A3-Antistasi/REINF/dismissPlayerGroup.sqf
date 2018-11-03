@@ -11,8 +11,8 @@ if (_units isEqualTo []) exitWith {};
 if (_units findIf {!([_x] call A3A_fnc_canFight)} != -1) exitWith {hint "You cannot disband supressed, undercover or unconscious units"};
 player globalChat "Get out of my sight you useless scum!";
 
-_nuevoGrp = createGroup buenos;
-//if ({isPlayer _x} count units group player == 1) then {_ai = true; _nuevogrp = createGroup buenos};
+_nuevoGrp = createGroup friendlySide;
+//if ({isPlayer _x} count units group player == 1) then {_ai = true; _nuevogrp = createGroup friendlySide};
 
 {
 if (typeOf _x != SDKUnarmed) then
@@ -27,11 +27,11 @@ if (recruitCooldown < time) then {recruitCooldown = time + 60} else {recruitCool
 
 _lider = leader _nuevoGrp;
 
-{_x domove getMarkerPos respawnBuenos} forEach units _nuevogrp;
+{_x domove getMarkerPos friendlyRespawn} forEach units _nuevogrp;
 
 _tiempo = time + 120;
 
-waitUntil {sleep 1; (time > _tiempo) or ({(_x distance getMarkerPos respawnBuenos < 50) and (alive _x)} count units _nuevogrp == {alive _x} count units _nuevogrp)};
+waitUntil {sleep 1; (time > _tiempo) or ({(_x distance getMarkerPos friendlyRespawn < 50) and (alive _x)} count units _nuevogrp == {alive _x} count units _nuevogrp)};
 
 _hr = 0;
 _resourcesFIA = 0;

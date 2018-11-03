@@ -1,7 +1,7 @@
 if (savingClient) exitWith {hint "Your personal stats are being saved"};
 if (!isDedicated) then
 	{
-	if (side player == buenos) then
+	if (side player == friendlySide) then
 		{
 		savingClient = true;
 		["loadoutPlayer", getUnitLoadout player] call fn_SaveStat;
@@ -54,16 +54,16 @@ if (!isDedicated) then
 	["smallCAmrk", smallCAmrk] call fn_SaveStat;
 	["miembros", miembros] call fn_SaveStat;
 	["antenas", antenasmuertas] call fn_SaveStat;
-	//["mrkNATO", (marcadores - controles) select {lados getVariable [_x,sideUnknown] == malos}] call fn_SaveStat;
-	["mrkSDK", (marcadores - controles - puestosFIA) select {lados getVariable [_x,sideUnknown] == buenos}] call fn_SaveStat;
-	["mrkCSAT", (marcadores - controles) select {lados getVariable [_x,sideUnknown] == muyMalos}] call fn_SaveStat;
-	["posHQ", [getMarkerPos respawnBuenos,getPos fuego,[getDir caja,getPos caja],[getDir mapa,getPos mapa],getPos bandera,[getDir cajaVeh,getPos cajaVeh]]] call fn_Savestat;
+	//["mrkNATO", (marcadores - controles) select {lados getVariable [_x,sideUnknown] == enemySide}] call fn_SaveStat;
+	["mrkSDK", (marcadores - controles - puestosFIA) select {lados getVariable [_x,sideUnknown] == friendlySide}] call fn_SaveStat;
+	["mrkCSAT", (marcadores - controles) select {lados getVariable [_x,sideUnknown] == oppositionSide}] call fn_SaveStat;
+	["posHQ", [getMarkerPos friendlyRespawn,getPos fuego,[getDir caja,getPos caja],[getDir mapa,getPos mapa],getPos bandera,[getDir cajaVeh,getPos cajaVeh]]] call fn_Savestat;
 	["prestigeNATO", prestigeNATO] call fn_SaveStat;
 	["prestigeCSAT", prestigeCSAT] call fn_SaveStat;
 	["fecha", date] call fn_SaveStat;
 	["skillFIA", skillFIA] call fn_SaveStat;
 	["destroyedCities", destroyedCities] call fn_SaveStat;
-	["distanciaSPWN", distanciaSPWN] call fn_SaveStat;
+	["spawnDistanceDefault", spawnDistanceDefault] call fn_SaveStat;
 	["civPerc", civPerc] call fn_SaveStat;
 	["chopForest", chopForest] call fn_SaveStat;
 	["maxUnits", maxUnits] call fn_SaveStat;
@@ -79,7 +79,7 @@ if (!isDedicated) then
 	//["firstLoad",false] call fn_SaveStat;
 private ["_hrfondo","_resfondo","_veh","_tipoVeh","_armas","_municion","_items","_mochis","_contenedores","_arrayEst","_posVeh","_dierVeh","_prestigeOPFOR","_prestigeBLUFOR","_ciudad","_datos","_marcadores","_garrison","_arrayMrkMF","_arrayPuestosFIA","_pospuesto","_tipoMina","_posMina","_detectada","_tipos","_exists","_amigo"];
 
-_hrfondo = (server getVariable "hr") + ({(alive _x) and (not isPlayer _x) and (_x getVariable ["spawner",false]) and ((group _x in (hcAllGroups theBoss) or (isPlayer (leader _x))) and (side group _x == buenos))} count allUnits);
+_hrfondo = (server getVariable "hr") + ({(alive _x) and (not isPlayer _x) and (_x getVariable ["spawner",false]) and ((group _x in (hcAllGroups theBoss) or (isPlayer (leader _x))) and (side group _x == friendlySide))} count allUnits);
 _resfondo = server getVariable "resourcesFIA";
 /*
 _armas = [];
@@ -90,7 +90,7 @@ _vehInGarage = [];
 _vehInGarage = _vehInGarage + vehInGarage;
 {
 _amigo = _x;
-if ((_amigo getVariable ["spawner",false]) and (side group _amigo == buenos))then
+if ((_amigo getVariable ["spawner",false]) and (side group _amigo == friendlySide))then
 	{
 	if ((alive _amigo) and (!isPlayer _amigo)) then
 		{
@@ -138,7 +138,7 @@ _arrayEst = [];
 {
 _veh = _x;
 _tipoVeh = typeOf _veh;
-if ((_veh distance getMarkerPos respawnBuenos < 50) and !(_veh in staticsToSave) and !(_tipoVeh in ["ACE_SandbagObject","Land_PaperBox_01_open_boxes_F","Land_PaperBox_01_open_empty_F"])) then
+if ((_veh distance getMarkerPos friendlyRespawn < 50) and !(_veh in staticsToSave) and !(_tipoVeh in ["ACE_SandbagObject","Land_PaperBox_01_open_boxes_F","Land_PaperBox_01_open_empty_F"])) then
 	{
 	if (((not (_veh isKindOf "StaticWeapon")) and (not (_veh isKindOf "ReammoBox")) and (not (_veh isKindOf "FlagCarrier")) and (not(_veh isKindOf "Building"))) and (not (_tipoVeh == "C_Van_01_box_F")) and (count attachedObjects _veh == 0) and (alive _veh) and ({(alive _x) and (!isPlayer _x)} count crew _veh == 0) and (not(_tipoVeh == "WeaponHolderSimulated"))) then
 		{
@@ -149,7 +149,7 @@ if ((_veh distance getMarkerPos respawnBuenos < 50) and !(_veh in staticsToSave)
 	};
 } forEach vehicles - [caja,bandera,fuego,cajaveh,mapa];
 
-_sitios = marcadores select {lados getVariable [_x,sideUnknown] == buenos};
+_sitios = marcadores select {lados getVariable [_x,sideUnknown] == friendlySide};
 {
 _posicion = position _x;
 if ((alive _x) and !(surfaceIsWater _posicion) and !(isNull _x)) then
@@ -208,17 +208,17 @@ _tipoMina = typeOf _x;
 _posMina = getPos _x;
 _dirMina = getDir _x;
 _detectada = [];
-if (_x mineDetectedBy buenos) then
+if (_x mineDetectedBy friendlySide) then
 	{
-	_detectada pushBack buenos
+	_detectada pushBack friendlySide
 	};
-if (_x mineDetectedBy malos) then
+if (_x mineDetectedBy enemySide) then
 	{
-	_detectada pushBack malos
+	_detectada pushBack enemySide
 	};
-if (_x mineDetectedBy muyMalos) then
+if (_x mineDetectedBy oppositionSide) then
 	{
-	_detectada pushBack muyMalos
+	_detectada pushBack oppositionSide
 	};
 _arrayMinas = _arrayMinas + [[_tipoMina,_posMina,_detectada,_dirMina]];
 } forEach allMines;
@@ -272,7 +272,7 @@ _datos pushBack [_x,killZones getVariable [_x,[]]];
 
 ["killZones",_datos] call fn_SaveStat;
 
-_controles = controles select {(lados getVariable [_x,sideUnknown] == buenos) and (controles find _x < defaultControlIndex)};
+_controles = controles select {(lados getVariable [_x,sideUnknown] == friendlySide) and (controles find _x < defaultControlIndex)};
 ["controlesSDK",_controles] call fn_SaveStat;
 
 savingServer = false;

@@ -38,7 +38,7 @@ if (_escarretera) then
 		_nul = [_veh] call A3A_fnc_AIVEHinit;
 		sleep 1;
 		};
-	_grupo = [_posicion, buenos, _garrison,true,false] call A3A_fnc_spawnGroup;
+	_grupo = [_posicion, friendlySide, _garrison,true,false] call A3A_fnc_spawnGroup;
 	//_unit = _grupo createUnit [staticCrewBuenos, _posicion, [], 0, "NONE"];
 	//_unit moveInGunner _veh;
 	{[_x,_marcador] spawn A3A_fnc_FIAinitBases; if (typeOf _x == staticCrewBuenos) then {_x moveInGunner _veh}} forEach units _grupo;
@@ -49,7 +49,7 @@ else
 	{
 	if (random 20 <= skillFIA) then {_formato pushBack (_x select 1)} else {_formato pushBack (_x select 0)};
 	} forEach gruposSDKSniper;
-	_grupo = [_posicion, buenos, _formato] call A3A_fnc_spawnGroup;
+	_grupo = [_posicion, friendlySide, _formato] call A3A_fnc_spawnGroup;
 	_grupo setBehaviour "STEALTH";
 	_grupo setCombatMode "GREEN";
 	{[_x,_marcador] spawn A3A_fnc_FIAinitBases;} forEach units _grupo;

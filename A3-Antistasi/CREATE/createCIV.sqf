@@ -51,7 +51,7 @@ while {(spawner getVariable _marcador != 2) and (_cuenta < _numVeh) and (_cuenta
 	_road = roadAt _p1;
 	if (!isNull _road) then
 		{
-		if ((count (nearestObjects [_p1, ["Car", "Truck"], 5]) == 0) and !([50,1,_road,buenos] call A3A_fnc_distanceUnits)) then
+		if ((count (nearestObjects [_p1, ["Car", "Truck"], 5]) == 0) and !([50,1,_road,friendlySide] call A3A_fnc_distanceUnits)) then
 			{
 			_roadcon = roadsConnectedto (_road);
 			_p2 = getPos (_roadcon select 0);
@@ -63,7 +63,7 @@ while {(spawner getVariable _marcador != 2) and (_cuenta < _numVeh) and (_cuenta
 		    _mrk setMarkerSize [5, 5];
 		    _mrk setMarkerShape "RECTANGLE";
 		    _mrk setMarkerBrush "SOLID";
-		    _mrk setMarkerColor colorBuenos;
+		    _mrk setMarkerColor friendlyColor;
 		    //_mrk setMarkerText _nombre;
 		    */
 			_veh = _tipoveh createVehicle _pos;
@@ -146,7 +146,7 @@ if ([_marcador,false] call A3A_fnc_fogCheck > 0.2) then
 					_veh addEventHandler ["HandleDamage",
 						{
 						_veh = _this select 0;
-						if (side(_this select 3) == buenos) then
+						if (side(_this select 3) == friendlySide) then
 							{
 							_condu = driver _veh;
 							if (side _condu == civilian) then {_condu leaveVehicle _veh};
@@ -186,17 +186,17 @@ waitUntil {sleep 1;(spawner getVariable _marcador == 2)};
 {deleteVehicle _x} forEach _civs;
 {deleteGroup _x} forEach _grupos;
 {
-if (!([distanciaSPWN-_size,1,_x,buenos] call A3A_fnc_distanceUnits)) then
+if (!([spawnDistanceDefault-_size,1,_x,friendlySide] call A3A_fnc_distanceUnits)) then
 	{
 	if (_x in reportedVehs) then {reportedVehs = reportedVehs - [_x]; publicVariable "reportedVehs"};
 	deleteVehicle _x;
 	}
 } forEach _vehiculos;
 {
-waitUntil {sleep 1; !([distanciaSPWN,1,_x,buenos] call A3A_fnc_distanceUnits)};
+waitUntil {sleep 1; !([spawnDistanceDefault,1,_x,friendlySide] call A3A_fnc_distanceUnits)};
 deleteVehicle _x} forEach _civsPatrol;
 {
-if (!([distanciaSPWN,1,_x,buenos] call A3A_fnc_distanceUnits)) then
+if (!([spawnDistanceDefault,1,_x,friendlySide] call A3A_fnc_distanceUnits)) then
 	{
 	if (_x in reportedVehs) then {reportedVehs = reportedVehs - [_x]; publicVariable "reportedVehs"};
 	deleteVehicle _x

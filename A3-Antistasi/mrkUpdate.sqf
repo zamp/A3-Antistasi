@@ -3,14 +3,14 @@ private ["_marcador","_mrkD"];
 _marcador = _this select 0;
 
 _mrkD = format ["Dum%1",_marcador];
-if (lados getVariable [_marcador,sideUnknown] == buenos) then
+if (lados getVariable [_marcador,sideUnknown] == friendlySide) then
 	{
 	_texto = if (count (garrison getVariable [_marcador,[]]) > 0) then {format [": %1", count (garrison getVariable [_marcador,[]])]} else {""};
-	if (markerColor _mrkD != colorBuenos) then {_mrkD setMarkerColor colorBuenos};
+	if (markerColor _mrkD != friendlyColor) then {_mrkD setMarkerColor friendlyColor};
 	if (_marcador in aeropuertos) then
 		{
 		_texto = format ["%2 Airbase%1",_texto,nameBuenos];
-		[_mrkD,format ["%1 Airbase",nameBuenos]] remoteExec ["setMarkerTextLocal",[malos,muyMalos],true];
+		[_mrkD,format ["%1 Airbase",nameBuenos]] remoteExec ["setMarkerTextLocal",[enemySide,oppositionSide],true];
 		//_mrkD setMarkerText format ["SDK Airbase%1",_texto];
 		if (markerType _mrkD != "flag_Syndicat") then {_mrkD setMarkerType "flag_Syndicat"};
 		}
@@ -19,7 +19,7 @@ if (lados getVariable [_marcador,sideUnknown] == buenos) then
 		if (_marcador in puestos) then
 			{
 			_texto = format ["%2 Outpost%1",_texto,nameBuenos];
-			[_mrkD,format ["%1 Outpost",nameBuenos]] remoteExec ["setMarkerTextLocal",[malos,muyMalos],true];
+			[_mrkD,format ["%1 Outpost",nameBuenos]] remoteExec ["setMarkerTextLocal",[enemySide,oppositionSide],true];
 			}
 		else
 			{
@@ -40,11 +40,11 @@ if (lados getVariable [_marcador,sideUnknown] == buenos) then
 			 	};
 			};
 		};
-	[_mrkD,_texto] remoteExec ["setMarkerTextLocal",[buenos,civilian],true];
+	[_mrkD,_texto] remoteExec ["setMarkerTextLocal",[friendlySide,civilian],true];
 	}
 else
 	{
-	if (lados getVariable [_marcador,sideUnknown] == malos) then
+	if (lados getVariable [_marcador,sideUnknown] == enemySide) then
 		{
 		if (_marcador in aeropuertos) then
 			{_mrkD setMarkerText format ["%1 Airbase",nameMalos];
@@ -57,13 +57,13 @@ else
 				_mrkD setMarkerText format ["%1 Outpost",nameMalos]
 				};
 			};
-		_mrkD setMarkerColor colorMalos;
+		_mrkD setMarkerColor enemyColor;
 		}
 	else
 		{
 		if (_marcador in aeropuertos) then {_mrkD setMarkerText format ["%1 Airbase",nameMuyMalos];_mrkD setMarkerType flagCSATmrk} else {
 		if (_marcador in puestos) then {_mrkD setMarkerText format ["%1 Outpost",nameMuyMalos]}};
-		_mrkD setMarkerColor colorMuyMalos;
+		_mrkD setMarkerColor oppositionColor;
 		};
 	if (_marcador in recursos) then
 	 	{
