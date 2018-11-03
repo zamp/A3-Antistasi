@@ -6,7 +6,7 @@ _grupos = [];
 _base = "";
 _roads = [];
 
-_arrayAeropuertos = if (hayIFA) then {(aeropuertos + puestos) select {((spawner getVariable _x != 0)) and (lados getVariable [_x,sideUnknown] != buenos)}} else {(puertos + aeropuertos + puestos) select {((spawner getVariable _x != 0)) and (lados getVariable [_x,sideUnknown] != buenos)}};
+_arrayAeropuertos = if (isFIA) then {(aeropuertos + puestos) select {((spawner getVariable _x != 0)) and (lados getVariable [_x,sideUnknown] != buenos)}} else {(puertos + aeropuertos + puestos) select {((spawner getVariable _x != 0)) and (lados getVariable [_x,sideUnknown] != buenos)}};
 
 _arrayAeropuertos1 = [];
 if !(isMultiplayer) then

@@ -113,7 +113,7 @@ else
 								}
 							else
 								{
-								if (hayIFA) then
+								if (isFIA) then
 									{
 									[_unit, "LIB_PTRD", 10, 0] call BIS_fnc_addWeapon;
 									};
@@ -145,7 +145,7 @@ if (!haveRadio) then
 	};
 
 if ({if (_x in humo) exitWith {1}} count unlockedMagazines > 0) then {_unit addMagazines [selectRandom humo,2]};
-if !(hayIFA) then
+if !(isFIA) then
 	{
 	if ((sunOrMoon < 1) and (_tipo != SDKUnarmed)) then
 		{
@@ -216,7 +216,7 @@ if (player == leader _unit) then
 		_muerto = _this select 0;
 		[_muerto] spawn A3A_fnc_postmortem;
 		_killer = _this select 1;
-		if !(hayIFA) then {arrayids pushBackUnique (name _muerto)};
+		if !(isFIA) then {arrayids pushBackUnique (name _muerto)};
 		if (side _killer == malos) then
 			{
 			_nul = [0.25,0,getPos _muerto] remoteExec ["A3A_fnc_citySupportChange",2];
@@ -238,7 +238,7 @@ if (player == leader _unit) then
 			};
 		_muerto setVariable ["spawner",nil,true];
 		}];
-	if ((typeOf _unit != SDKUnarmed) and !hayIFA) then
+	if ((typeOf _unit != SDKUnarmed) and !isFIA) then
 		{
 		_idUnit = arrayids call BIS_Fnc_selectRandom;
 		arrayids = arrayids - [_idunit];
@@ -247,7 +247,7 @@ if (player == leader _unit) then
 	if (captive player) then {[_unit] spawn A3A_fnc_undercoverAI};
 
 	_unit setVariable ["rearming",false];
-	if ((!haveRadio) and (!hayTFAR) and (!hayACRE) and !(hayIFA)) then
+	if ((!haveRadio) and (!hayTFAR) and (!hayACRE) and !(isFIA)) then
 		{
 		while {alive _unit} do
 			{

@@ -51,7 +51,7 @@ for "_i" from 1 to _var3 do
 	_num = 1 + (floor random 5);
 	_crate addMagazineCargoGlobal [_cosa, _num];
 	};
-if !(hayIFA) then
+if !(isFIA) then
 	{
 	for "_i" from 1 to _var4 do
 		{

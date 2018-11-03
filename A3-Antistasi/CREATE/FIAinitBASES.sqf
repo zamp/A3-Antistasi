@@ -120,7 +120,7 @@ else
 							}
 						else
 							{
-							if (hayIFA) then
+							if (isFIA) then
 								{
 								[_unit, "LIB_PTRD", 10, 0] call BIS_fnc_addWeapon;
 								};
@@ -144,7 +144,7 @@ else
 _unit selectWeapon (primaryWeapon _unit);
 
 if (!haveRadio) then {_unit unlinkItem "ItemRadio"};
-if !(hayIFA) then
+if !(isFIA) then
 	{
 	if (sunOrMoon < 1) then
 		{

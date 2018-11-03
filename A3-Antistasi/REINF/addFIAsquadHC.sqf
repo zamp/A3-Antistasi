@@ -2,7 +2,7 @@
 if (player != theBoss) exitWith {hint "Only our Commander has access to this function"};
 //if (!allowPlayerRecruit) exitWith {hint "Server is very loaded. \nWait one minute or change FPS settings in order to fulfill this request"};
 if (markerAlpha respawnBuenos == 0) exitWith {hint "You cant recruit a new squad while you are moving your HQ"};
-if (!([player] call A3A_fnc_hasRadio)) exitWith {if !(hayIFA) then {hint "You need a radio in your inventory to be able to give orders to other squads"} else {hint "You need a Radio Man in your group to be able to give orders to other squads"}};
+if (!([player] call A3A_fnc_hasRadio)) exitWith {if !(isFIA) then {hint "You need a radio in your inventory to be able to give orders to other squads"} else {hint "You need a Radio Man in your group to be able to give orders to other squads"}};
 _chequeo = false;
 {
 	if (((side _x == muyMalos) or (side _x == malos)) and (_x distance petros < 500) and ([_x] call A3A_fnc_canFight) and !(isPlayer _x)) exitWith {_chequeo = true};
@@ -18,7 +18,7 @@ _exit = false;
 if (_tipoGrupo isEqualType "") then
 	{
 	if (_tipoGrupo == "not_supported") then {_exit = true; hint "The group or vehicle type you request is not supported in your modset"};
-	if (hayIFA and ((_tipoGrupo == SDKMortar) or (_tipoGrupo == SDKMGStatic)) and !debug) then {_exit = true; hint "The group or vehicle type you request is not supported in your modset"};
+	if (isFIA and ((_tipoGrupo == SDKMortar) or (_tipoGrupo == SDKMGStatic)) and !debug) then {_exit = true; hint "The group or vehicle type you request is not supported in your modset"};
 	};
 
 if (activeGREF) then
@@ -72,7 +72,7 @@ else
 		_coste = _coste + ([vehSDKTruck] call A3A_fnc_vehiclePrice)
 		};
 	};
-if ((_conMochis != "") and hayIFA) exitWith {hint "Your current modset does not support packing / unpacking static weapons"; garageVeh = nil};
+if ((_conMochis != "") and isFIA) exitWith {hint "Your current modset does not support packing / unpacking static weapons"; garageVeh = nil};
 
 if (_hr < _costeHR) then {_exit = true;hint format ["You do not have enough HR for this request (%1 required)",_costeHR]};
 

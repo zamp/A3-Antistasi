@@ -256,7 +256,7 @@ while {true} do
 								{
 								if !(haveNV) then
 									{
-									if (hayIFA) then
+									if (isFIA) then
 										{
 										if (([_lider] call A3A_fnc_canFight) and ((typeOf _lider) in squadLeaders)) then {[_lider,_cercano] call A3A_fnc_useFlares}
 										}

@@ -126,119 +126,119 @@ if (not(_nombre in _yaMetidos)) then
 activeAFRF = false;
 activeUSAF = false;
 activeGREF = false;
-hayFFAA = false;
-hayIFA = false;
+isFFAA = false;
+isFIA = false;
 myCustomMod = false;
 
 if ("LIB_PTRD" in arifles) then
-	{
-	hayIFA = true;
+{
+	isFIA = true;
 	cascos = [];
 	humo = ["LIB_RDG","LIB_NB39"];
-	}
+}
 else
-	{
+{
 	if ("rhs_weap_akms" in arifles) then {activeAFRF = true; hayRHS = true};
-	if ("ffaa_armas_hkg36k_normal" in arifles) then {hayFFAA = true};
+	if ("ffaa_armas_hkg36k_normal" in arifles) then {isFFAA = true};
 	if ("rhs_weap_m4a1_d" in arifles) then {activeUSAF = true; hayRHS = true};
 	if ("rhs_weap_m92" in arifles) then {activeGREF = true; hayRHS = true} else {mguns pushBack "LMG_Mk200_BI_F"};
 	cascos = cascos select {getNumber (configfile >> "CfgWeapons" >> _x >> "ItemInfo" >> "HitpointsProtectionInfo" >> "Head" >> "armor") > 2};
 	humo = ["SmokeShell","SmokeShellRed","SmokeShellGreen","SmokeShellBlue","SmokeShellYellow","SmokeShellPurple","SmokeShellOrange"];
-	};
+};
 
-titanLaunchers = if ((!hayRHS) and !hayIFA and !myCustomMod) then
-	{
+titanLaunchers = if ((!hayRHS) and !isFIA and !myCustomMod) then
+{
 	["launch_B_Titan_F","launch_I_Titan_F","launch_O_Titan_ghex_F","launch_O_Titan_F","launch_B_Titan_tna_F"]
-	}
+}
 else
-	{
+{
 	[]
-	};
-antitanqueAAF = if ((!hayRHS) and !hayIFA and !myCustomMod) then
-	{
+};
+antitanqueAAF = if ((!hayRHS) and !isFIA and !myCustomMod) then
+{
 	["launch_I_Titan_F","launch_I_Titan_short_F"]
-	}
+}
 else
-	{
+{
 	[];
-	};//possible Titan weapons that spawn in  ammoboxes
-MantitanqueAAF = if ((!hayRHS) and !hayIFA and !myCustomMod) then
-	{
+};//possible Titan weapons that spawn in  ammoboxes
+MantitanqueAAF = if ((!hayRHS) and !isFIA and !myCustomMod) then
+{
 	["Titan_AT", "Titan_AP", "Titan_AA"]
-	}
+}
 else
-	{
-	if (hayIFA) then {["LIB_Shg24"]} else {[]};
-	};//possible Titan rockets that spawn in  ammoboxes
-minasAAF = if ((!hayRHS) and !hayIFA and !myCustomMod) then
-	{
+{
+	if (isFIA) then {["LIB_Shg24"]} else {[]};
+};//possible Titan rockets that spawn in  ammoboxes
+minasAAF = if ((!hayRHS) and !isFIA and !myCustomMod) then
+{
 	["SLAMDirectionalMine_Wire_Mag","SatchelCharge_Remote_Mag","ClaymoreDirectionalMine_Remote_Mag", "ATMine_Range_Mag","APERSTripMine_Wire_Mag","APERSMine_Range_Mag", "APERSBoundingMine_Range_Mag"]
-	}
+}
 else
-	{
+{
 	if (hayRHS) then
-		{
+	{
 		["rhsusf_m112_mag","rhsusf_mine_m14_mag","rhs_mine_M19_mag","rhs_mine_tm62m_mag","rhs_mine_pmn2_mag"]
-		}
+	}
 	else
-		{
-		if (hayIFA and !myCustomMod) then {["LIB_PMD6_MINE_mag","LIB_TM44_MINE_mag","LIB_US_TNT_4pound_mag"]} else {[]};
-		}
+	{
+		if (isFIA and !myCustomMod) then {["LIB_PMD6_MINE_mag","LIB_TM44_MINE_mag","LIB_US_TNT_4pound_mag"]} else {[]};
+	}
 	};//possible mines that spawn in AAF ammoboxescomment "Exported from Arsenal by Alberto";
-itemsAAF = if ((!hayRHS) and !hayIFA and !myCustomMod) then
-	{
+itemsAAF = if ((!hayRHS) and !isFIA and !myCustomMod) then
+{
 	["FirstAidKit","Medikit","MineDetector","NVGoggles","ToolKit","muzzle_snds_H","muzzle_snds_L","muzzle_snds_M","muzzle_snds_B","muzzle_snds_H_MG","muzzle_snds_acp","bipod_03_F_oli","muzzle_snds_338_green","muzzle_snds_93mmg_tan","Rangefinder","Laserdesignator","ItemGPS","acc_pointer_IR","ItemRadio"]
-	}
+}
 else
-	{
+{
 	if (hayRHS) then
-		{
+	{
 		["FirstAidKit","Medikit","MineDetector","ToolKit","ItemGPS","acc_pointer_IR","ItemRadio"]
-		}
-	else
-		{
-		if (hayIFA and !myCustomMod) then {["FirstAidKit","Medikit","ToolKit","LIB_ToolKit"]} else {["FirstAidKit","Medikit","ToolKit"]};
-		}
-	};
-NVGoggles = if (!hayIFA) then {["NVGoggles_OPFOR","NVGoggles_INDEP","O_NVGoggles_hex_F","O_NVGoggles_urb_F","O_NVGoggles_ghex_F","NVGoggles_tna_F","NVGoggles"]} else {[]};
-
-arrayCivVeh = if !(hayIFA) then
-	{
-	["C_Hatchback_01_F","C_Hatchback_01_sport_F","C_Offroad_01_F","C_SUV_01_F","C_Van_01_box_F","C_Van_01_fuel_F","C_Van_01_transport_F","C_Truck_02_transport_F","C_Truck_02_covered_F","C_Offroad_02_unarmed_F"];
 	}
-else
-	{
-	["LIB_DAK_OpelBlitz_Open","LIB_GazM1","LIB_GazM1_dirty","LIB_DAK_Kfz1","LIB_DAK_Kfz1_hood"];
-	};
-
-
-if (!hayIFA) then
-	{
-	if (!activeUSAF) then
-		{
-		call compile preProcessFileLineNumbers "Templates\malosVanilla.sqf";
-		}
 	else
-		{
+	{
+		if (isFIA and !myCustomMod) then {["FirstAidKit","Medikit","ToolKit","LIB_ToolKit"]} else {["FirstAidKit","Medikit","ToolKit"]};
+	}
+};
+NVGoggles = if (!isFIA) then {["NVGoggles_OPFOR","NVGoggles_INDEP","O_NVGoggles_hex_F","O_NVGoggles_urb_F","O_NVGoggles_ghex_F","NVGoggles_tna_F","NVGoggles"]} else {[]};
+
+arrayCivVeh = if !(isFIA) then
+{
+	["C_Hatchback_01_F","C_Hatchback_01_sport_F","C_Offroad_01_F","C_SUV_01_F","C_Van_01_box_F","C_Van_01_fuel_F","C_Van_01_transport_F","C_Truck_02_transport_F","C_Truck_02_covered_F","C_Offroad_02_unarmed_F"];
+}
+else
+{
+	["LIB_DAK_OpelBlitz_Open","LIB_GazM1","LIB_GazM1_dirty","LIB_DAK_Kfz1","LIB_DAK_Kfz1_hood"];
+};
+
+
+if (!isFIA) then
+{
+	if (!activeUSAF) then
+	{
+		call compile preProcessFileLineNumbers "Templates\malosVanilla.sqf";
+	}
+	else
+	{
 		if (buenos == independent) then {call compile preProcessFileLineNumbers "Templates\malosRHSUSAF.sqf"} else {call compile preProcessFileLineNumbers "Templates\buenosRHSUSAF.sqf"};
-		};
+	};
 	if (!activeAFRF) then {call compile preProcessFileLineNumbers "Templates\muyMalosVanilla.sqf"} else {call compile preProcessFileLineNumbers "Templates\muyMalosRHSAFRF.sqf"};
 
 	if (!activeGREF) then
-		{
-		call compile preProcessFileLineNumbers "Templates\buenosVanilla.sqf"
-		}
-	else
-		{
-		if (buenos == independent) then {call compile preProcessFileLineNumbers "Templates\buenosRHSGREF.sqf"} else {call compile preProcessFileLineNumbers "Templates\malosRHSGREF.sqf"};
-		};
-	}
-else
 	{
+		call compile preProcessFileLineNumbers "Templates\buenosVanilla.sqf"
+	}
+	else
+	{
+		if (buenos == independent) then {call compile preProcessFileLineNumbers "Templates\buenosRHSGREF.sqf"} else {call compile preProcessFileLineNumbers "Templates\malosRHSGREF.sqf"};
+	};
+}
+else
+{
 	call compile preProcessFileLineNumbers "Templates\buenosIFA.sqf";
 	call compile preProcessFileLineNumbers "Templates\muyMalosIFA.sqf";
 	call compile preProcessFileLineNumbers "Templates\malosIFA.sqf";
-	};
+};
 
 squadLeaders = SDKSL + [(NATOSquad select 0),(NATOSpecOp select 0),(CSATSquad select 0),(CSATSpecOp select 0),(FIASquad select 0)];
 medics = SDKMedic + [(FIAsquad select ((count FIAsquad)-1)),(NATOSquad select ((count NATOSquad)-1)),(NATOSpecOp select ((count NATOSpecOp)-1)),(CSATSquad select ((count CSATSquad)-1)),(CSATSpecOp select ((count CSATSpecOp)-1))];
@@ -263,11 +263,11 @@ _uniform = (getUnitLoadout _unit select 3) select 0;
 banditUniforms pushBackUnique _uniform;
 uniformsSDK pushBackUnique _uniform;
 if (count _x > 1) then
-	{
+{
 	_unit = _x select 1;
 	_uniform = (getUnitLoadout _unit select 3) select 0;
 	uniformsSDK pushBackUnique _uniform;
-	};
+};
 } forEach [SDKSniper,SDKATman,SDKMedic,SDKMG,SDKExp,SDKGL,SDKMil,SDKSL,SDKEng,[SDKUnarmed],[staticCrewBuenos]];
 //optic, pointer and flashlight automated detection
 opticasAAF = [];
@@ -332,7 +332,7 @@ arrayCivs = if (worldName == "Tanoa") then
 	}
 else
 	{
-	if !(hayIFA) then
+	if !(isFIA) then
 		{
 		["C_man_1","C_man_1_1_F","C_man_1_2_F","C_man_1_3_F","C_man_hunter_1_F","C_man_p_beggar_F","C_man_p_beggar_F_afro","C_man_p_fugitive_F","C_man_p_shorts_1_F","C_man_polo_1_F","C_man_polo_2_F","C_man_polo_3_F","C_man_polo_4_F","C_man_polo_5_F","C_man_polo_6_F","C_man_shorts_1_F","C_man_shorts_2_F","C_man_shorts_3_F","C_man_shorts_4_F","C_scientist_F","C_Orestes","C_Nikos","C_Nikos_aged"]
 		}
@@ -341,9 +341,9 @@ else
 		["LIB_CIV_Assistant","LIB_CIV_Assistant_2","LIB_CIV_Citizen_1","LIB_CIV_Citizen_2","LIB_CIV_Citizen_3","LIB_CIV_Citizen_4","LIB_CIV_Citizen_5","LIB_CIV_Citizen_6","LIB_CIV_Citizen_7","LIB_CIV_Citizen_8","LIB_CIV_Priest","LIB_CIV_Doctor","LIB_CIV_Functionary_3","LIB_CIV_Functionary_2","LIB_CIV_Functionary_4","LIB_CIV_Villager_4","LIB_CIV_Villager_1","LIB_CIV_Villager_2","LIB_CIV_Villager_3","LIB_CIV_Woodlander_1","LIB_CIV_Woodlander_3","LIB_CIV_Woodlander_2","LIB_CIV_Woodlander_4","LIB_CIV_SchoolTeacher","LIB_CIV_SchoolTeacher_2","LIB_CIV_Rocker","LIB_CIV_Worker_3","LIB_CIV_Worker_1","LIB_CIV_Worker_4","LIB_CIV_Worker_2"]
 		};
 	};//array of possible civs. Only euro types picked (this is Greece). Add any civ classnames you wish here
-civBoats = if !(hayIFA) then {["C_Boat_Civil_01_F","C_Scooter_Transport_01_F","C_Boat_Transport_02_F","C_Rubberboat"]} else {[]};
+civBoats = if !(isFIA) then {["C_Boat_Civil_01_F","C_Scooter_Transport_01_F","C_Boat_Transport_02_F","C_Rubberboat"]} else {[]};
 lamptypes = ["Lamps_Base_F", "PowerLines_base_F","Land_LampDecor_F","Land_LampHalogen_F","Land_LampHarbour_F","Land_LampShabby_F","Land_NavigLight","Land_runway_edgelight","Land_PowerPoleWooden_L_F"];
-if !(hayIFA) then
+if !(isFIA) then
 	{
 	arrayids = ["Anthis","Costa","Dimitirou","Elias","Gekas","Kouris","Leventis","Markos","Nikas","Nicolo","Panas","Rosi","Samaras","Thanos","Vega"];
 	if (isMultiplayer) then {arrayids = arrayids + ["protagonista"]};
@@ -384,7 +384,7 @@ smallCApos = [];
 bigAttackInProgress = false;
 chopForest = false;
 distanceForAirAttack = 10000;
-distanceForLandAttack = if (hayIFA) then {5000} else {3000};
+distanceForLandAttack = if (isFIA) then {5000} else {3000};
 
 if (worldName == "Tanoa") then
 	{
@@ -499,7 +499,7 @@ garrisonIsChanging = false;
 playerHasBeenPvP = [];
 misiones = []; publicVariable "misiones";
 movingMarker = false;
-if !(hayIFA) then
+if !(isFIA) then
 	{
 	unlockedItems = ["ItemMap","ItemWatch","ItemCompass","FirstAidKit","Medikit","ToolKit","H_Booniehat_khk","H_Booniehat_oli","H_Booniehat_grn","H_Booniehat_dirty","H_Cap_oli","H_Cap_blk","H_MilCap_rucamo","H_MilCap_gry","H_BandMask_blk","H_Bandanna_khk","H_Bandanna_gry","H_Bandanna_camo","H_Shemag_khk","H_Shemag_tan","H_Shemag_olive","H_ShemagOpen_tan","H_Beret_grn","H_Beret_grn_SF","H_Watchcap_camo","H_TurbanO_blk","H_Hat_camo","H_Hat_tan","H_Beret_blk","H_Beret_red","H_Watchcap_khk","G_Balaclava_blk","G_Balaclava_combat","G_Balaclava_lowprofile","G_Balaclava_oli","G_Bandanna_beast","G_Tactical_Black","G_Aviator","G_Shades_Black","acc_flashlight"] + uniformsSDK + civUniforms;//Initial Arsenal available items
 	if (side group petros == independent) then {unlockedItems pushBack "I_UavTerminal"} else {unlockedItems pushBack "B_UavTerminal"};
@@ -514,7 +514,7 @@ else
 
 if (!activeGREF) then
     {
-    if !(hayIFA) then
+    if !(isFIA) then
     	{
 	    unlockedWeapons = ["hgun_PDW2000_F","hgun_Pistol_01_F","hgun_ACPC2_F","Binocular","SMG_05_F","SMG_02_F"];//"LMG_03_F"
 		unlockedRifles = ["hgun_PDW2000_F","arifle_AKM_F","arifle_AKS_F","SMG_05_F","SMG_02_F"];//standard rifles for AI riflemen, medics engineers etc. are picked from this array. Add only rifles.
@@ -569,7 +569,7 @@ _vest = _loadOut select 4;
 if !(_vest isEqualTo []) then {unlockedItems pushBackUnique (_vest select 0)};
 } forEach [SDKSniper,SDKATman,SDKMedic,SDKMG,SDKExp,SDKGL,SDKMil,SDKSL,SDKEng,[SDKUnarmed],[staticCrewBuenos]];
 
-unlockedBackpacks = if !(hayIFA) then {["B_FieldPack_oli","B_FieldPack_blk","B_FieldPack_ocamo","B_FieldPack_oucamo","B_FieldPack_cbr"]} else {["B_LIB_US_M2Flamethrower","B_LIB_SOV_RA_MGAmmoBag_Empty"]}; //Initial Arsenal available backpacks
+unlockedBackpacks = if !(isFIA) then {["B_FieldPack_oli","B_FieldPack_blk","B_FieldPack_ocamo","B_FieldPack_oucamo","B_FieldPack_cbr"]} else {["B_LIB_US_M2Flamethrower","B_LIB_SOV_RA_MGAmmoBag_Empty"]}; //Initial Arsenal available backpacks
 //lockedMochis = lockedMochis - unlockedBackpacks;
 unlockedOptics = [];
 unlockedMG = [];
@@ -592,7 +592,7 @@ if (isClass (configFile >> "CfgPatches" >> "task_force_radio")) then
     haveRadio = true;
     unlockedItems = unlockedItems + ["tf_microdagr","tf_anprc148jem"];//making this items Arsenal available.["tf_anprc152"]
     tf_no_auto_long_range_radio = true; publicVariable "tf_no_auto_long_range_radio";//set to false and players will start with LR radio, uncomment the last line of so.
-	if (hayIFA) then
+	if (isFIA) then
 		{tf_give_personal_radio_to_regular_soldier = false;
 		publicVariable "tf_give_personal_radio_to_regular_soldier";
 		}
@@ -633,7 +633,7 @@ if (isClass (configFile >> "CfgPatches" >> "task_force_radio")) then
 		"ACE_HandFlare_White",
 		"ACE_HandFlare_Red"
 	];
-	if (hayIFA) then {aceItems append ["ACE_LIB_LadungPM","ACE_SpareBarrel"]};
+	if (isFIA) then {aceItems append ["ACE_LIB_LadungPM","ACE_SpareBarrel"]};
 	publicVariable "aceItems";
 
 	aceBasicMedItems = [
@@ -666,7 +666,7 @@ if (isClass (configFile >> "CfgPatches" >> "task_force_radio")) then
 
 if (!isNil "ace_common_fnc_isModLoaded") then {
 	unlockedItems = unlockedItems + aceItems;
-	if !(hayIFA) then
+	if !(isFIA) then
 		{
 		unlockedBackpacks pushBackUnique "ACE_TacticalLadder_Pack";
 		unlockedWeapons pushBackUnique "ACE_VMH3";

@@ -92,10 +92,10 @@ _introShot =
     ]
     ] spawn BIS_fnc_establishingShot;
 
-_titulo = if (worldName == "Tanoa") then {["Warlords of the Pacific","by Barbolani",antistasiVersion] spawn BIS_fnc_infoText} else {if (hayIFA) then {["Armia Krajowa","by Barbolani",antistasiVersion] spawn BIS_fnc_infoText} else {["Antistasi","by Barbolani",antistasiVersion] spawn BIS_fnc_infoText}};
+_titulo = if (worldName == "Tanoa") then {["Warlords of the Pacific","by Barbolani",antistasiVersion] spawn BIS_fnc_infoText} else {if (isFIA) then {["Armia Krajowa","by Barbolani",antistasiVersion] spawn BIS_fnc_infoText} else {["Antistasi","by Barbolani",antistasiVersion] spawn BIS_fnc_infoText}};
 disableUserInput false;
 player addWeaponGlobal "itemmap";
-if !(hayIFA) then {player addWeaponGlobal "itemgps"};
+if !(isFIA) then {player addWeaponGlobal "itemgps"};
 player setVariable ["spawner",true,true];
 if (isMultiplayer) then
 	{
@@ -566,12 +566,12 @@ if (hayRHS) then
 	{
 	_texto = _texto + ["RHS Detected\n\nAntistasi detects RHS in the server config.\nDepending on the modules will have the following effects.\n\nAFRF: Replaces CSAT by a mix of russian units\n\nUSAF: Replaces NATO by a mix of US units\n\nGREF: Recruited AI will count with RHS as basic weapons, replaces FIA with Chdk units. Adds some civilian trucks"];
 	};
-if (hayFFAA) then
+if (isFFAA) then
 	{
 	_texto = _texto + ["FFAA Detected\n\nAntistasi detects FFAA in the server config.\nFIA Faction will be replaced by Spanish Armed Forces"];
 	};
 
-if (hayTFAR or hayACE or hayRHS or hayACRE or hayFFAA) then
+if (hayTFAR or hayACE or hayRHS or hayACRE or isFFAA) then
 	{
 	[_texto] spawn
 		{

@@ -1,0 +1,1 @@
+HINT_ONLY_ONE_DEPLOY_AT_ONCE = "We can only deploy / delete one Observation Post or Roadblock at a time.";

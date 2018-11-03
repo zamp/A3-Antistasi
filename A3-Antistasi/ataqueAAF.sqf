@@ -131,7 +131,7 @@ if !(_tmpObjetivos isEqualTo []) then
 							_cuenta = ((count _garrison) + (count _puestos) + (2*(count _estaticas)));
 							if (_cuenta <= 8) then
 								{
-								if (!hayIFA or (_posSitio distance _posBase < distanceForLandAttack)) then
+								if (!isFIA or (_posSitio distance _posBase < distanceForLandAttack)) then
 									{
 									_proceder = false;
 									_faciles pushBack [_sitio,_base];
@@ -298,7 +298,7 @@ if (count _faciles == 4) exitWith
 	{
 	{[[_x select 0,_x select 1,"",false],"A3A_fnc_patrolCA"] remoteExec ["A3A_fnc_scheduler",2];sleep 30} forEach _faciles;
 	};
-if (hayIFA and (sunOrMoon < 1)) exitWith {};
+if (isFIA and (sunOrMoon < 1)) exitWith {};
 if ((count _objetivosFinal > 0) and (count _faciles < 3)) then
 	{
 	_arrayFinal = [];

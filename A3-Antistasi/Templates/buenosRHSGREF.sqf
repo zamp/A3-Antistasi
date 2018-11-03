@@ -51,7 +51,7 @@ lamparasSDK = ["rhs_acc_2dpZenit","acc_flashlight"];
 ATMineMag = "rhs_mine_tm62m_mag";
 APERSMineMag = "rhs_mine_pmn2_mag";
 
-if (hayFFAA) then
+if (isFFAA) then
 	{
 	call compile preProcessFileLineNumbers "Templates\malosFFAA.sqf"
 	}

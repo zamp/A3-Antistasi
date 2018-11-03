@@ -20,7 +20,7 @@ if (_marcador != "Synd_HQ") then
 	if (!(_marcador in ciudades)) then
 		{
 		_veh = createVehicle [SDKFlag, _posicion, [],0, "CAN_COLLIDE"];
-		if (hayIFA) then {_veh setFlagTexture SDKFlagTexture};
+		if (isFIA) then {_veh setFlagTexture SDKFlagTexture};
 		_veh allowDamage false;
 		_vehiculos pushBack _veh;
 		[_veh,"SDKFlag"] remoteExec ["A3A_fnc_flagaction",0,_veh];

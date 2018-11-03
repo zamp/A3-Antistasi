@@ -96,7 +96,7 @@ if (!_inWaves) then
 	{
 	_threatEvalLand = [_posDestino,_lado] call A3A_fnc_landThreatEval;
 	_aeropuertos = aeropuertos select {(lados getVariable [_x,sideUnknown] == _lado) and ([_x,true] call A3A_fnc_airportCanAttack) and (getMarkerPos _x distance2D _posDestino < distanceForAirAttack)};
-	if (hayIFA and (_threatEvalLand <= 15)) then {_aeropuertos = _areopuertos select {(getMarkerPos _x distance2D _posDestino < distanceForLandAttack)}};
+	if (isFIA and (_threatEvalLand <= 15)) then {_aeropuertos = _areopuertos select {(getMarkerPos _x distance2D _posDestino < distanceForLandAttack)}};
 	_puestos = if (_threatEvalLand <= 15) then {puestos select {(lados getVariable [_x,sideUnknown] == _lado) and ([_posDestino,getMarkerPos _x] call A3A_fnc_isTheSameIsland) and (getMarkerPos _x distance _posDestino < distanceForLandAttack)  and ([_x,true] call A3A_fnc_airportCanAttack)}} else {[]};
 	_aeropuertos = _aeropuertos + _puestos;
 	if (_esMarcador) then
@@ -485,7 +485,7 @@ else
 		if (count _pos == 0) then {_pos = _posOrigen};
 		_vehicle=[_pos, _ang + 90,_tipoVeh, _lado] call bis_fnc_spawnvehicle;
 		_veh = _vehicle select 0;
-		if (hayIFA) then {_veh setVelocityModelSpace [((velocityModelSpace _veh) select 0) + 0,((velocityModelSpace _veh) select 1) + 150,((velocityModelSpace _veh) select 2) + 50]};
+		if (isFIA) then {_veh setVelocityModelSpace [((velocityModelSpace _veh) select 0) + 0,((velocityModelSpace _veh) select 1) + 150,((velocityModelSpace _veh) select 2) + 50]};
 		_vehCrew = _vehicle select 1;
 		_grupoVeh = _vehicle select 2;
 		_soldados append _vehCrew;

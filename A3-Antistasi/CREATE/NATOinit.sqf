@@ -83,7 +83,7 @@ else
 	else
 		{
 		_skill = _skill min 0.2;
-		if ((tierWar > 1) and !hayIFA) then
+		if ((tierWar > 1) and !isFIA) then
 			{
 			_rifleFinal = primaryWeapon _unit;
 			_magazines = getArray (configFile / "CfgWeapons" / _rifleFinal / "magazines");
@@ -108,7 +108,7 @@ if (not(_tipo in sniperUnits)) then
 	};
 
 _hmd = hmd _unit;
-if !(hayIFA) then
+if !(isFIA) then
 	{
 	if (sunOrMoon < 1) then
 		{

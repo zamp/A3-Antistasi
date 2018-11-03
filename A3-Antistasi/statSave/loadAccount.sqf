@@ -129,7 +129,7 @@ if (isServer and !_byPassServer) then
 			};
 		};
 	} forEach unlockedWeapons;
-	if (hayIFA) then {unlockedRifles = unlockedRifles - ["LIB_M2_Flamethrower","LIB_PTRD"]};
+	if (isFIA) then {unlockedRifles = unlockedRifles - ["LIB_M2_Flamethrower","LIB_PTRD"]};
 
 	publicVariable "unlockedRifles";
 	publicVariable "unlockedMG";

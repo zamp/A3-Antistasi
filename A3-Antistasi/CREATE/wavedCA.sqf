@@ -254,7 +254,7 @@ while {(_waves > 0)} do
 		};
 
 	_esMar = false;
-	if !(hayIFA) then
+	if !(isFIA) then
 		{
 		for "_i" from 0 to 3 do
 			{
@@ -393,7 +393,7 @@ while {(_waves > 0)} do
 		_posSuelo = [_posOrigen select 0,_posorigen select 1,0];
 		_posOrigen set [2,300];
 		_grupoUav = grpNull;
-		if !(hayIFA) then
+		if !(isFIA) then
 			{
 			_tipoVeh = if (_lado == malos) then {vehNATOUAV} else {vehCSATUAV};
 
@@ -447,7 +447,7 @@ while {(_waves > 0)} do
 					};
 				};
 			};
-		if ((_waves != 1) and (_firstWave) and (!hayIFA)) then
+		if ((_waves != 1) and (_firstWave) and (!isFIA)) then
 			{
 			if (count (_vehPool - vehTransportAir) != 0) then {_vehPool = _vehPool - vehTransportAir};
 			};
@@ -488,7 +488,7 @@ while {(_waves > 0)} do
 				{
 				_vehicle=[_pos, _ang + 90,_tipoveh, _lado] call bis_fnc_spawnvehicle;
 				_veh = _vehicle select 0;
-				if (hayIFA) then {_veh setVelocityModelSpace [((velocityModelSpace _veh) select 0) + 0,((velocityModelSpace _veh) select 1) + 150,((velocityModelSpace _veh) select 2) + 50]};
+				if (isFIA) then {_veh setVelocityModelSpace [((velocityModelSpace _veh) select 0) + 0,((velocityModelSpace _veh) select 1) + 150,((velocityModelSpace _veh) select 2) + 50]};
 				_vehCrew = _vehicle select 1;
 				_grupoVeh = _vehicle select 2;
 				_pilotos append _vehCrew;
@@ -582,7 +582,7 @@ while {(_waves > 0)} do
 	_plane = if (_lado == malos) then {vehNATOPlane} else {vehCSATPlane};
 	if (_lado == malos) then
 		{
-		if (((not(_mrkDestino in puestos)) and (not(_mrkDestino in puertos)) and (_mrkOrigen != "NATO_carrier")) or hayIFA) then
+		if (((not(_mrkDestino in puestos)) and (not(_mrkDestino in puertos)) and (_mrkOrigen != "NATO_carrier")) or isFIA) then
 			{
 			[_mrkOrigen,_mrkDestino,_lado] spawn A3A_fnc_artilleria;
 			diag_log "Antistasi: Arty Spawned";
@@ -618,7 +618,7 @@ while {(_waves > 0)} do
 		}
 	else
 		{
-		if (((not(_mrkDestino in recursos)) and (not(_mrkDestino in puertos)) and (_mrkOrigen != "CSAT_carrier")) or hayIFA) then
+		if (((not(_mrkDestino in recursos)) and (not(_mrkDestino in puertos)) and (_mrkOrigen != "CSAT_carrier")) or isFIA) then
 			{
 			if !(_posOrigenLand isEqualTo []) then {[_posOrigenLand,_mrkDestino,_lado] spawn A3A_fnc_artilleria} else {[_mrkOrigen,_mrkDestino,_lado] spawn A3A_fnc_artilleria};
 			diag_log "Antistasi: Arty Spawned";

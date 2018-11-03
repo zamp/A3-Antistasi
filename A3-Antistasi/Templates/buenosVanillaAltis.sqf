@@ -50,7 +50,7 @@ lamparasSDK = ["acc_flashlight"];
 ATMineMag = "ATMine_Range_Mag";
 APERSMineMag = "APERSMine_Range_Mag";
 
-if (hayFFAA) then
+if (isFFAA) then
 	{
 	call compile preProcessFileLineNumbers "Templates\malosFFAA.sqf"
 	}

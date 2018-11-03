@@ -57,7 +57,7 @@ if (_esControl) then
 	if (!_esFIA) then
 		{
 		_grupoE = grpNull;
-		if !(hayIFA) then
+		if !(isFIA) then
 			{
 			_pos = [getPos (_roads select 0), 7, _dirveh + 270] call BIS_Fnc_relPos;
 			_bunker = "Land_BagBunker_01_Small_green_F" createVehicle _pos;
@@ -97,10 +97,10 @@ if (_esControl) then
 			{_nul = [_x] call A3A_fnc_AIVEHinit} forEach _vehiculos;
 			};
 		_tipogrupo = if (_lado == malos) then {selectRandom gruposNATOmid} else {selectRandom gruposCSATmid};
-		_grupo = if !(hayIFA) then {[_posicion,_lado, _tipogrupo,false,true] call A3A_fnc_spawnGroup} else {[_posicion,_lado, _tipogrupo] call A3A_fnc_spawnGroup};
+		_grupo = if !(isFIA) then {[_posicion,_lado, _tipogrupo,false,true] call A3A_fnc_spawnGroup} else {[_posicion,_lado, _tipogrupo] call A3A_fnc_spawnGroup};
 		if !(isNull _grupo) then
 			{
-			if !(hayIFA) then
+			if !(isFIA) then
 				{
 				{[_x] join _grupo} forEach units _grupoE;
 				deleteGroup _grupoE;
@@ -116,14 +116,14 @@ if (_esControl) then
 		}
 	else
 		{
-		_tipoVeh = if !(hayIFA) then {vehFIAArmedCar} else {vehFIACar};
+		_tipoVeh = if !(isFIA) then {vehFIAArmedCar} else {vehFIACar};
 		_veh = _tipoVeh createVehicle getPos (_roads select 0);
 		_veh setDir _dirveh + 90;
 		_nul = [_veh] call A3A_fnc_AIVEHinit;
 		_vehiculos pushBack _veh;
 		sleep 1;
 		_tipogrupo = selectRandom gruposFIAMid;
-		_grupo = if !(hayIFA) then {[_posicion, _lado, _tipoGrupo,false,true] call A3A_fnc_spawnGroup} else {[_posicion, _lado, _tipoGrupo] call A3A_fnc_spawnGroup};
+		_grupo = if !(isFIA) then {[_posicion, _lado, _tipoGrupo,false,true] call A3A_fnc_spawnGroup} else {[_posicion, _lado, _tipoGrupo] call A3A_fnc_spawnGroup};
 		if !(isNull _grupo) then
 			{
 			_unit = _grupo createUnit [FIARifleman, _posicion, [], 0, "NONE"];
@@ -156,7 +156,7 @@ else
 			};
 		_grupo = [_posicion,_lado, _cfg] call A3A_fnc_spawnGroup;
 		_nul = [leader _grupo, _marcador, "SAFE","SPAWNED","RANDOM","NOVEH2","NOFOLLOW"] execVM "scripts\UPSMON.sqf";
-		if !(hayIFA) then
+		if !(isFIA) then
 			{
 			sleep 1;
 			{_soldados pushBack _x} forEach units _grupo;
