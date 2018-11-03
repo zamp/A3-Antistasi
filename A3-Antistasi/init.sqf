@@ -1,11 +1,11 @@
 //Arma 3 - Antistasi - Warlords of the Pacific by Barbolani
 //Do whatever you want with this code, but credit me for the thousand hours spent making this.
 enableSaving [false,false];
-mapa setObjectTexture [0,"pic.jpg"];
+mapa setObjectTexture [0,"whiteboard.jpg"];
 if (isServer and (isNil "serverInitDone")) then {skipTime random 24};
 
 if (!isMultiPlayer) then
-    {
+	{
     gameMode = 1;
     diag_log "Starting Antistasi SP";
     call compile preprocessFileLineNumbers "initVar.sqf";//this is the file where you can modify a few things.

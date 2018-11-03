@@ -3,7 +3,7 @@
 
 author="Barbolani";
 OnLoadName = "Antistasi Altis";
-OnLoadMission = "Be a Resistance leader, be a hero";
+OnLoadMission = "Be resistance! Kill the infidels!";
 loadScreen = "pic.JPG";
 
 overviewText = "Be the Resistance Leader. Fight against a superior enemy in technology, number, assets and vehicles. Use guerrilla tactics in a totally dynamic world, with around 18 sidemissions, everywhere, anytime, anything.";
@@ -190,9 +190,9 @@ class CfgIdentities
         name = "Stavros";
         nameSound = "Stavrou";
         face="GreekHead_A3_01";
-    glasses="None";
-    speaker="Male01GRE";
-    pitch=1.1;
+		glasses="None";
+		speaker="Male01GRE";
+		pitch=1.1;
     };
      class amiguete
     {

@@ -5,7 +5,7 @@ if (!([player] call A3A_fnc_hasRadio)) exitWith {if !(hayIFA) then {hint "You ne
 
 _tipo = _this select 0;
 
-if (!visibleMap) then {openMap true};
+	if (!visibleMap) then {openMap true};
 posicionTel = [];
 if (_tipo != "delete") then {hint "Click on the position you wish to build the Observation Post or Roadblock. \n Remember: to build Roadblocks you must click exactly on a road map section"} else {hint "Click on the Observation Post or Roadblock to delete."};
 
@@ -26,7 +26,7 @@ _coste = 0;
 _hr = 0;
 
 if (_tipo != "delete") then
-	{
+{
 	_escarretera = isOnRoad _posicionTel;
 
 	_tipogrupo = gruposSDKSniper;
@@ -41,14 +41,13 @@ if (_tipo != "delete") then
 	//_formato = (configfile >> "CfgGroups" >> "buenos" >> "Guerilla" >> "Infantry" >> _tipogrupo);
 	//_unidades = [_formato] call groupComposition;
 	{_coste = _coste + (server getVariable (_x select 0)); _hr = _hr +1} forEach _tipoGrupo;
-	}
+}
 else
-	{
+{
 	_mrk = [puestosFIA,_posicionTel] call BIS_fnc_nearestPosition;
 	_pos = getMarkerPos _mrk;
 	if (_posicionTel distance _pos >10) exitWith {hint "No post nearby"};
-	};
-//if ((_tipo == "delete") and (_posicionTel distance _pos >10)) exitWith {hint "No post nearby"};
+};
 
 _resourcesFIA = server getVariable "resourcesFIA";
 _hrFIA = server getVariable "hr";
@@ -56,8 +55,10 @@ _hrFIA = server getVariable "hr";
 if (((_resourcesFIA < _coste) or (_hrFIA < _hr)) and (_tipo!= "delete")) exitWith {hint format ["You lack of resources to build this Outpost or Roadblock \n %1 HR and %2 € needed",_hr,_coste]};
 
 if (_tipo != "delete") then
-	{
+{
 	[-_hr,-_coste] remoteExec ["A3A_fnc_resourcesFIA",2];
-	};
-
- [[_tipo,_posicionTel],"A3A_fnc_crearPuestosFIA"] call BIS_fnc_MP
+}
+else 
+{
+	[[_tipo,_posicionTel],"A3A_fnc_crearPuestosFIA"] call BIS_fnc_MP
+};
